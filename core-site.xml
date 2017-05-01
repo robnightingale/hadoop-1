@@ -32,5 +32,32 @@
 		the FileSystem implementation class.  The uris authority is used to
 		determine the host, port, etc. for a filesystem.</description>
 	</property>
+<property>
+  <name>hadoop.proxyuser.hue.hosts</name>
+  <value>*</value>
+</property>
+<property>
+  <name>hadoop.proxyuser.hue.groups</name>
+  <value>*</value>
+</property>
+
+<property>
+  <name>hadoop.proxyuser.hduser.hosts</name>
+  <value>*</value>
+</property>
+<property>
+  <name>hadoop.proxyuser.hduser.groups</name>
+  <value>*</value>
+</property>
+
+<property>
+    <name>hadoop.proxyuser.hue.hosts</name>
+    <value>*</value>
+  </property>
+  <property>
+    <name>hadoop.proxyuser.hue.groups</name>
+    <value>*</value>
+</property>
+
 
 </configuration>

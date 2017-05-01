@@ -12,6 +12,11 @@ echo -e "Starting SSHD service"
 
 if [[ $2 == "master" ]]; then
 su - hduser -c "$HADOOP_INSTALL/sbin/start-all.sh"
+su - hduser -c "$HADOOP_INSTALL/bin/hdfs dfs -mkdir -p /user/hduser"
+su - hduser -c "$HADOOP_INSTALL/bin/hdfs dfs -mkdir -p /user/hue"
+su - hduser -c "$HADOOP_INSTALL/bin/hdfs dfs -chmod g+x /user/hduser"
+su - hduser -c "$HADOOP_INSTALL/bin/hdfs dfs -chmod g+x /user/hue"
+su - hduser -c "$HADOOP_INSTALL/sbin/httpfs.sh start"
 fi
 
 if [[ $2 == "slave" ]]; then

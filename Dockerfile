@@ -96,6 +96,7 @@ RUN chown -R hduser:hadoop /usr/local/hadoop_store
 ADD hdfs-site.xml /usr/local/hadoop/etc/hadoop/hdfs-site.xml
 ADD mapred-site.xml /usr/local/hadoop/etc/hadoop/mapred-site.xml
 ADD core-site.xml /usr/local/hadoop/etc/hadoop/core-site.xml
+ADD httpfs-site.xml /usr/local/hadoop/etc/hadoop/httpfs-site.xml
 ADD slaves /usr/local/hadoop/etc/hadoop/slaves
 RUN chown hduser:hadoop /usr/local/hadoop/etc/hadoop/hdfs-site.xml /usr/local/hadoop/etc/hadoop/mapred-site.xml /usr/local/hadoop/etc/hadoop/core-site.xml /usr/local/hadoop/etc/hadoop/slaves
 
@@ -133,6 +134,10 @@ RUN chown hduser:hadoop $HADOOP_INSTALL/input
 #CMD ["/etc/bootstrap.sh", "-bash"]
 # Hdfs ports
 EXPOSE 50010 50020 50070 50075 50090 8020 9000 54310
+
+# httpfs port
+EXPOSE 14000
+
 # Mapred ports
 EXPOSE 10020 19888
 #Yarn ports
@@ -141,6 +146,6 @@ EXPOSE 8030 8031 8032 8033 8040 8042 8088
 EXPOSE 49707 22 2122
 
 #CMD ["/etc/bootstrap.sh", "-ssh"]
-RUN apt-get update & apt-get install -y net-tools
+RUN apt-get update && apt-get install -y net-tools
 RUN apt-get install -y iputils-ping
 CMD /usr/sbin/sshd -D
