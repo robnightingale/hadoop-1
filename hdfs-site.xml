@@ -37,10 +37,10 @@
 <property>
         <name>dfs.datanode.max.xcievers</name>
         <value>8192</value>
+</property>
 <property>
   <name>dfs.webhdfs.enabled</name>
   <value>true</value>
-</property>
 </property>
 
 </configuration>
