@@ -12,6 +12,7 @@ echo -e "Starting SSHD service"
 
 if [[ $2 == "master" ]]; then
 su - hduser -c "$HADOOP_INSTALL/sbin/start-all.sh"
+su - hduser -c "$HADOOP_INSTALL/sbin/mr-jobhistory-daemon.sh start historyserver --config /usr/local/hadoop/etc/hadoop"
 su - hduser -c "$HADOOP_INSTALL/bin/hdfs dfs -mkdir -p /user/hduser"
 su - hduser -c "$HADOOP_INSTALL/bin/hdfs dfs -mkdir -p /user/hue"
 su - hduser -c "$HADOOP_INSTALL/bin/hdfs dfs -chmod g+x /user/hduser"
@@ -20,7 +21,7 @@ su - hduser -c "$HADOOP_INSTALL/sbin/httpfs.sh start"
 fi
 
 if [[ $2 == "slave" ]]; then
-su - hduser -c "$HADOOP_INSTALL/sbin/hadoop-daemon.sh start datanode"
+su - hduser -c "$HADOOP_INSTALL/sbin/hadoop-daemon.sh --config /usr/local/hadoop/etc/hadoop --script hdfs start datanode"
 su - hduser -c "$HADOOP_INSTALL/sbin/yarn-daemons.sh --config /usr/local/hadoop/etc/hadoop  start nodemanager"
 fi
 

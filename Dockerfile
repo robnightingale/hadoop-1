@@ -97,8 +97,9 @@ ADD hdfs-site.xml /usr/local/hadoop/etc/hadoop/hdfs-site.xml
 ADD mapred-site.xml /usr/local/hadoop/etc/hadoop/mapred-site.xml
 ADD core-site.xml /usr/local/hadoop/etc/hadoop/core-site.xml
 ADD httpfs-site.xml /usr/local/hadoop/etc/hadoop/httpfs-site.xml
+ADD yarn-site.xml /usr/local/hadoop/etc/hadoop/yarn-site.xml
 ADD slaves /usr/local/hadoop/etc/hadoop/slaves
-RUN chown hduser:hadoop /usr/local/hadoop/etc/hadoop/hdfs-site.xml /usr/local/hadoop/etc/hadoop/mapred-site.xml /usr/local/hadoop/etc/hadoop/core-site.xml /usr/local/hadoop/etc/hadoop/slaves
+RUN chown hduser:hadoop /usr/local/hadoop/etc/hadoop/hdfs-site.xml /usr/local/hadoop/etc/hadoop/mapred-site.xml /usr/local/hadoop/etc/hadoop/core-site.xml /usr/local/hadoop/etc/hadoop/slaves /usr/local/hadoop/etc/hadoop/httpfs-site.xml /usr/local/hadoop/etc/hadoop/yarn-site.xml
 
 #RUN mkdir -p /tmp/native
 #RUN curl -L https://github.com/sequenceiq/docker-hadoop-build/releases/download/v2.7.1/hadoop-native-64-2.7.1.tgz | tar -xz -C /tmp/native
@@ -139,7 +140,8 @@ EXPOSE 50010 50020 50070 50075 50090 8020 9000 54310
 EXPOSE 14000
 
 # Mapred ports
-EXPOSE 10020 19888
+EXPOSE 10020 19888 10033 54311
+
 #Yarn ports
 EXPOSE 8030 8031 8032 8033 8040 8042 8088
 #Other ports
