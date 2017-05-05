@@ -35,5 +35,10 @@
         <name>yarn.resourcemanager.scheduler.address</name>
         <value>node01:8030</value>
     </property>
+
+<property> 
+<name>yarn.app.mapreduce.am.job.client.port-range</name>
+<value>56000-56020</value>
+</property>
 </configuration>
 

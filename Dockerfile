@@ -147,6 +147,9 @@ EXPOSE 8030 8031 8032 8033 8040 8042 8088 8025
 #Other ports
 EXPOSE 49707 22 2122
 
+#Client-Port Range
+EXPOSE 56000-56020
+
 #CMD ["/etc/bootstrap.sh", "-ssh"]
 RUN apt-get update && apt-get install -y net-tools
 RUN apt-get install -y iputils-ping
