@@ -13,7 +13,10 @@
   limitations under the License. See accompanying LICENSE file.
 -->
 <configuration>
-
+<property>
+<name>yarn.nodemanager.address</name>
+<value>0.0.0.0:8039</value>
+</property>
 <property>
  <name>yarn.resourcemanager.hostname</name>
  <value>node01</value>

@@ -4,7 +4,7 @@ docker run --name consul -h $HOSTNAME      -p 8300:8300 -p 8301:8301       -p 83
 
 docker run -d -v /var/run/docker.sock:/tmp/docker.sock --link consul:consul --name registrator -h registrator gliderlabs/registrator:latest consul://11.0.0.3:8500
 
-docker run -d  -p 50000-50020:50000-50020 -p 50075:50075 -p 8020:8020 -p 444:44444 -p 50010:50010 -p 2122:2122 -p 50070:50070 -p 54310:54310 --dns 172.17.0.2 --dns 8.8.8.8 --dns-search service.consul -e "SERVICE_2122_NAME=node02" -e "SERVICE_2122_ID=node02.2122" --name hadoop -h node02 sumit/hadoop:latest /etc/bootstrap.sh -d slave
+docker run -d  -p 8039:8039 -p 56000-56020:56000-56020 -p 50075:50075 -p 8020:8020 -p 444:44444 -p 50010:50010 -p 2122:2122 -p 50070:50070 -p 54310:54310 --dns 172.17.0.2 --dns 8.8.8.8 --dns-search service.consul -e "SERVICE_2122_NAME=node02" -e "SERVICE_2122_ID=node02.2122" --name hadoop -h node02 sumit/hadoop:latest /etc/bootstrap.sh -d slave
 
 
 
