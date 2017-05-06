@@ -15,8 +15,8 @@ su - hduser -c "$HADOOP_INSTALL/sbin/start-all.sh"
 su - hduser -c "$HADOOP_INSTALL/sbin/mr-jobhistory-daemon.sh start historyserver --config /usr/local/hadoop/etc/hadoop"
 su - hduser -c "$HADOOP_INSTALL/bin/hdfs dfs -mkdir -p /user/hduser"
 su - hduser -c "$HADOOP_INSTALL/bin/hdfs dfs -mkdir -p /user/hue"
-su - hduser -c "$HADOOP_INSTALL/bin/hdfs dfs -chmod g+x /user/hduser"
-su - hduser -c "$HADOOP_INSTALL/bin/hdfs dfs -chmod g+x /user/hue"
+su - hduser -c "$HADOOP_INSTALL/bin/hdfs dfs -chmod g+w /user/hduser"
+su - hduser -c "$HADOOP_INSTALL/bin/hdfs dfs -chmod g+w /user/hue"
 su - hduser -c "$HADOOP_INSTALL/sbin/httpfs.sh start"
 fi
 
