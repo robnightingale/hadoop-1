@@ -19,7 +19,7 @@
 </property>
 <property>
  <name>yarn.resourcemanager.hostname</name>
- <value>node01</value>
+ <value>hdfs-master</value>
  <description>Yarn Config</description>
 </property>
 <property>
@@ -32,11 +32,11 @@
     </property>
     <property>
         <name>yarn.resourcemanager.resource-tracker.address</name>
-        <value>node01:8025</value>
+        <value>hdfs-master:8025</value>
     </property>
     <property>
         <name>yarn.resourcemanager.scheduler.address</name>
-        <value>node01:8030</value>
+        <value>hdfs-master:8030</value>
     </property>
 
 <property> 

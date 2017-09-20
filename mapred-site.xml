@@ -20,7 +20,7 @@
 
 	<property>
 		<name>mapred.job.tracker</name>
-		<value>node01:54311</value>
+		<value>hdfs-master:54311</value>
 		<description>The host and port that the MapReduce job tracker runs
 		at.  If "local", then jobs are run in-process as a single map
 		and reduce task.
@@ -33,7 +33,7 @@
 </property>
 <property>
   <name>mapreduce.jobhistory.address</name>
-  <value>node01:10020</value>
+  <value>hdfs-master:10020</value>
   <description>Host and port for Job History Server (default 0.0.0.0:10020)</description>
 </property>
 </configuration>

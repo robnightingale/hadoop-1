@@ -1,5 +1,9 @@
-FROM sumit/java7:latest
+FROM master.cloud.com:5000/java8:latest
 MAINTAINER Sumit Kumar Maji
+
+
+WORKDIR /usr/local/
+ARG REPOSITORY_HOST
 
 ADD . /container/
 

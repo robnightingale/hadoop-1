@@ -13,9 +13,10 @@ chown hduser:hadoop /home/hduser/.ssh/config
 
 echo 'hduser:hadoop' | chpasswd
 
-tar -xzvf /container/hadoop-2.6.5.tar.gz -C /usr/local/
+wget "$REPOSITORY_HOST"/repo/hadoop-2.6.5.tar.gz
+tar -xzvf hadoop-2.6.5.tar.gz
 mv /usr/local/hadoop-2.6.5 /usr/local/hadoop
-rm -rf /container/hadoop-2.6.5.tar.gz
+rm -rf /usr/local/hadoop-2.6.5.tar.gz
 chown -R hduser:hadoop /usr/local/hadoop
 
 su - hduser -c "echo 'export JAVA_HOME=/usr/local/jdk' >> /home/hduser/.bashrc"
