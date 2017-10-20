@@ -105,6 +105,17 @@ ENV LD_LIBRARY_PATH /usr/local/lib:$HADOOP_INSTALL/lib/native:$LD_LIBRARY_PATH
 #    && cp target/native/target/usr/local/bin/container-executor $HADOOP_INSTALL/bin/ \
 #    && chmod 6050 $HADOOP_INSTALL/bin/container-executor
 
+RUN mkdir -p /usr/lib/bigtop-utils/
+RUN cp /usr/bin/jsvc /usr/lib/bigtop-utils/
+RUN sed -i "s/\${HADOOP_SECURE_DN_USER}/hduser/g" /usr/local/hadoop/etc/hadoop/hadoop-env.sh &&\
+sed -i "/HADOOP_SECURE_DN_PID_DIR/ s/\${HADOOP_PID_DIR}/\/var\/run\/hadoop\/\$HADOOP_SECURE_DN_USER/g" /usr/local/hadoop/etc/hadoop/hadoop-env.sh &&\
+sed -i "s/\${HADOOP_LOG_DIR}\/\${HADOOP_HDFS_USER}/\/var\/log\/hadoop\/\$HADOOP_SECURE_DN_USER/g" /usr/local/hadoop/etc/hadoop/hadoop-env.sh &&\
+echo 'export JSVC_HOME=/usr/lib/bigtop-utils/' >> /usr/local/hadoop/etc/hadoop/hadoop-env.sh
+
+
+RUN sudo mkdir -p /var/log/hadoop
+RUN sudo mkdir -p /var/run/hadoop
+
 RUN addgroup hadoop
 # Hdfs ports
 EXPOSE 50010 50020 50070 50075 50090 8020 9000 54310
