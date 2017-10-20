@@ -1,0 +1,23 @@
+<configuration>
+    <property>
+        <name>fs.defaultFS</name>
+        <value>hdfs://hdfs-master.cloud.com:8020</value>
+    </property>
+	<property>
+                <name>hadoop.tmp.dir</name>
+                <value>/app/hadoop/tmp</value>
+                <description>A base for other temporary directories.</description>
+        </property>
+
+    <property>
+         <name>hadoop.security.authentication</name>
+         <value>kerberos</value>
+         <description> Set the authentication for the cluster.
+         Valid values are: simple or kerberos.</description>
+    </property>
+    <property>
+         <name>hadoop.security.authorization</name>
+         <value>true</value>
+         <description>Enable authorization for different protocols.</description>
+    </property>
+</configuration>

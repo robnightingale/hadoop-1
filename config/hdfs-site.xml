@@ -1,0 +1,47 @@
+<configuration>
+    <property>
+        <name>dfs.replication</name>
+        <value>1</value>
+    </property>
+	 <property>
+                <name>dfs.namenode.name.dir</name>
+                <value>file:/usr/local/hadoop_store/hdfs/namenode</value>
+                </property>
+        <property>
+                <name>dfs.datanode.data.dir</name>
+                <value>file:/usr/local/hadoop_store/hdfs/datanode</value>
+                </property>
+<property>
+        <name>dfs.datanode.max.xcievers</name>
+        <value>8192</value>
+</property>
+<property>
+  <name>dfs.webhdfs.enabled</name>
+  <value>true</value>
+</property>
+
+<property>
+<name>dfs.block.access.token.enable</name>
+<value>true</value>
+</property>
+
+
+<property>
+<name>dfs.namenode.keytab.file</name>
+<value>/etc/security/keytabs/hduser.keytab</value> <!-- path to the HDFS keytab -->
+</property>
+<property>
+<name>dfs.namenode.kerberos.principal</name>
+<value>hduser/_HOST@CLOUD.COM</value>
+</property>
+<property>
+<name>dfs.namenode.kerberos.internal.spnego.principal</name>
+<value>HTTP/_HOST@CLOUD.COM</value>
+</property>
+
+
+<property>
+<name>dfs.web.authentication.kerberos.principal</name>
+<value>HTTP/_HOST@CLOUD.COM</value>
+</property>
+</configuration>

@@ -1,0 +1,57 @@
+<configuration>
+    <property>
+        <name>yarn.nodemanager.aux-services</name>
+        <value>mapreduce_shuffle</value>
+    </property>
+
+
+  <property>
+     <name>yarn.resourcemanager.principal</name>
+     <value>rm/hdfs-master.cloud.com@CLOUD.COM</value>
+  </property>
+   
+  <property>
+       <name>yarn.resourcemanager.keytab</name>
+       <value>/etc/security/keytabs/rm.service.keytab</value>
+  </property>
+   
+  <property>
+       <name>yarn.nodemanager.principal</name>
+       <value>nm/hdfs-master.cloud.com@CLOUD.COM</value>
+  </property>
+   
+  <property>
+       <name>yarn.nodemanager.keytab</name>
+       <value>/etc/security/keytabs/nm.service.keytab</value>
+  </property>
+   
+  <property>
+       <name>yarn.timeline-service.principal</name>
+       <value>yarn/hdfs-master.cloud.com@CLOUD.COM</value>
+  </property>
+   
+  <property>
+       <name>yarn.timeline-service.keytab</name>
+       <value>/etc/security/keytabs/yarn.service.keytab</value>
+  </property>
+   
+  <property>
+       <name>yarn.resourcemanager.webapp.delegation-token-auth-filter.enabled</name>
+       <value>true</value>
+  </property>
+   
+  <property>
+       <name>yarn.timeline-service.http-authentication.type</name>
+       <value>kerberos</value>
+  </property>
+   
+  <property>
+       <name>yarn.timeline-service.http-authentication.kerberos.principal</name>
+       <value>HTTP/hdfs-master.cloud.com@CLOUD.COM</value>
+  </property>
+   
+  <property>
+       <name>yarn.timeline-service.http-authentication.kerberos.keytab</name>
+       <value>/etc/security/keytabs/yarn.service.keytab</value>
+  </property>
+</configuration>
