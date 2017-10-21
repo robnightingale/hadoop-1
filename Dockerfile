@@ -69,7 +69,7 @@ ADD config/slaves /usr/local/hadoop/etc/hadoop/slaves
 ADD config/ssl-server.xml /usr/local/hadoop/etc/hadoop/ssl-server.xml
 ADD config/hduser.jks /usr/local/hadoop/etc/hadoop/hduser.jks
 RUN echo 'yarn.nodemanager.linux-container-executor.group=hadoop\nbanned.users=bin\nmin.user.id=500\nallowed.system.users=hduser' > $HADOOP_INSTALL/etc/hadoop/container-executor.cfg
-
+RUN sed -i '/# resolve links/ s/^/export JAVA_HOME=\/usr\/local\/jdk\n/' $HADOOP_INSTALL/sbin/httpfs.sh
 #RUN $HADOOP_INSTALL/bin/hdfs namenode -format
 
 #RUN cp /container/bootstrap.sh /etc/bootstrap.sh
