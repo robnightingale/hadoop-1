@@ -62,11 +62,12 @@ su - root -c "$HADOOP_INSTALL/sbin/yarn-daemon.sh start resourcemanager"
 su - root -c "$HADOOP_INSTALL/sbin/yarn-daemon.sh start nodemanager"
 #su - root -c "$HADOOP_INSTALL/sbin/start-all.sh"
  su - root -c "$HADOOP_INSTALL/sbin/mr-jobhistory-daemon.sh start historyserver --config /usr/local/hadoop/etc/hadoop"
-# su - root -c "$HADOOP_INSTALL/bin/hdfs dfs -mkdir -p /user/hduser"
-# su - root -c "$HADOOP_INSTALL/bin/hdfs dfs -mkdir -p /user/hue"
-# su - root -c "$HADOOP_INSTALL/bin/hdfs dfs -chmod g+w /user/hduser"
-# su - root -c "$HADOOP_INSTALL/bin/hdfs dfs -chmod g+w /user/hue"
-# su - root -c "$HADOOP_INSTALL/sbin/httpfs.sh start"
+ kinit -k -t /etc/security/keytabs/hduser.keytab hduser/$(hostname -f)
+ su - root -c "$HADOOP_INSTALL/bin/hdfs dfs -mkdir -p /user/hduser"
+ su - root -c "$HADOOP_INSTALL/bin/hdfs dfs -mkdir -p /user/hue"
+ su - root -c "$HADOOP_INSTALL/bin/hdfs dfs -chmod g+w /user/hduser"
+ su - root -c "$HADOOP_INSTALL/bin/hdfs dfs -chmod g+w /user/hue"
+ su - root -c "$HADOOP_INSTALL/sbin/httpfs.sh start"
 }
 
 startSlave() {
