@@ -88,6 +88,10 @@
   <name>dfs.http.policy</name>
   <value>HTTPS_ONLY</value>
 </property>
-
+<property>
+         <name>dfs.permissions.supergroup</name>
+         <value>hadoop</value>
+         <description>The name of the group of super-users.</description>
+    </property>
 
 </configuration>
