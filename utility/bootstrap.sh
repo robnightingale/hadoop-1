@@ -27,9 +27,13 @@ setEnvVariable() {
 }
 
 changeOwner() {
- chown -R hduser:hadoop /app/hadoop/tmp
- chown -R hduser:hadoop /usr/local/hadoop_store
- chown -R hduser:hadoop /usr/local/hadoop
+ chown -R root:hadoop /app/hadoop/tmp
+ chown -R root:hadoop /usr/local/hadoop_store
+ chown -R root:hadoop /usr/local/hadoop
+ chmod 050 /usr/local/hadoop/bin/container-executor
+ chmod u+s /usr/local/hadoop/bin/container-executor
+ chmod g+s /usr/local/hadoop/bin/container-executor
+ su - root -c "$HADDOP_INSTALL/bin/container-executor"
 }
 
 initializePrincipal() {
@@ -42,14 +46,16 @@ initializePrincipal() {
  mkdir -p /etc/security/keytabs
  mv hduser.keytab /etc/security/keytabs
  chmod 400 /etc/security/keytabs/hduser.keytab
- chown hduser:hadoop /etc/security/keytabs/hduser.keytab
+ chown root:hadoop /etc/security/keytabs/hduser.keytab
 }
 
 
 startMaster() {
-su - hduser -c "$HADOOP_INSTALL/etc/hadoop/hadoop-env.sh"
-su - hduser -c "$HADOOP_INSTALL/sbin/hadoop-daemon.sh start namenode"
-su - hduser -c "$HADOOP_INSTALL/sbin/hadoop-daemon.sh start datanode"
+su - root -c "$HADOOP_INSTALL/etc/hadoop/hadoop-env.sh"
+su - root -c "$HADOOP_INSTALL/sbin/hadoop-daemon.sh start namenode"
+su - root -c "$HADOOP_INSTALL/sbin/hadoop-daemon.sh start datanode"
+su - root -c "$HADOOP_INSTALL/sbin/yarn-daemon.sh start resourcemanager"
+su - root -c "$HADOOP_INSTALL/sbin/yarn-daemon.sh start nodemanager"
 #su - root -c "$HADOOP_INSTALL/sbin/start-all.sh"
 # su - root -c "$HADOOP_INSTALL/sbin/mr-jobhistory-daemon.sh start historyserver --config /usr/local/hadoop/etc/hadoop"
 # su - root -c "$HADOOP_INSTALL/bin/hdfs dfs -mkdir -p /user/hduser"
@@ -80,8 +86,8 @@ sshPromt() {
 initialize() {
    if [[ $1 == 'master' ]] 
    then
-su - hduser -c "$HADOOP_INSTALL/bin/hdfs namenode -format"
-    startMaster
+   su - root -c "$HADOOP_INSTALL/bin/hdfs namenode -format"
+   startMaster
    elif [[ $1 == 'slave' ]]
    then
     startSlave
@@ -92,10 +98,9 @@ main() {
  if [ ! -f /hadoop_initialized ]; then
     /utility/ldap/bootstrap.sh
     startSsh
-    su - hduser -c "echo 'Initiating......'"
     initializePrincipal
     changeOwner
-    setEnvVariable hduser
+    #setEnvVariable hduser
     initialize $2
     touch /hadoop_initialized
   else

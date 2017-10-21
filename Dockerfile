@@ -68,6 +68,7 @@ ADD config/yarn-site.xml /usr/local/hadoop/etc/hadoop/yarn-site.xml
 ADD config/slaves /usr/local/hadoop/etc/hadoop/slaves
 ADD config/ssl-server.xml /usr/local/hadoop/etc/hadoop/ssl-server.xml
 ADD config/hduser.jks /usr/local/hadoop/etc/hadoop/hduser.jks
+RUN echo 'yarn.nodemanager.linux-container-executor.group=hadoop\nbanned.users=bin\nmin.user.id=500\nallowed.system.users=hduser' > $HADOOP_INSTALL/etc/hadoop/container-executor.cfg
 
 #RUN $HADOOP_INSTALL/bin/hdfs namenode -format
 
