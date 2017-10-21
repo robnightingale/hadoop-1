@@ -36,7 +36,7 @@ changeOwner() {
  chmod 050 /usr/local/hadoop/bin/container-executor
  chmod u+s /usr/local/hadoop/bin/container-executor
  chmod g+s /usr/local/hadoop/bin/container-executor
- su - root -c "$HADDOP_INSTALL/bin/container-executor"
+ su - root -c "$HADOOP_INSTALL/bin/container-executor"
 }
 
 initializePrincipal() {
