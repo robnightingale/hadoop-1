@@ -10,6 +10,7 @@ startSsh() {
 }
 
 setEnvVariable() {
+ fqdn=$(hostname -f)
  echo 'export JAVA_HOME=/usr/local/jdk' >> /etc/bash.bashrc
  echo 'export PATH=$PATH:$JAVA_HOME/bin' >> /etc/bash.bashrc
  echo 'export HADOOP_INSTALL=/usr/local/hadoop' >> /etc/bash.bashrc
@@ -24,6 +25,8 @@ setEnvVariable() {
  echo 'export HADOOP_CONF_DIR=/usr/local/hadoop/etc/hadoop' >> /etc/bash.bashrc
  echo 'export LD_LIBRARY_PATH=/usr/local/lib:$HADOOP_INSTALL/lib/native:$LD_LIBRARY_PATH' >> /etc/bash.bashrc
  echo 'cd /usr/local/hadoop' >> /etc/bash.bashrc
+ sed -i "s/_HOST/$fqdn/g" $HADOOP_INSTALL/etc/hadoop/yarn-site.xml
+ sed -i "s/_HOST/$fqdn/g" $HADOOP_INSTALL/etc/hadoop/mapred-site.xml 
 }
 
 changeOwner() {
@@ -68,8 +71,8 @@ su - root -c "$HADOOP_INSTALL/sbin/yarn-daemon.sh start nodemanager"
 
 startSlave() {
  su - root -c "$HADOOP_INSTALL/etc/hadoop/hadoop-env.sh"
-# su - root -c "$HADOOP_INSTALL/sbin/hadoop-daemon.sh --config /usr/local/hadoop/etc/hadoop --script hdfs start datanode"
-# su - root -c "$HADOOP_INSTALL/sbin/yarn-daemons.sh --config /usr/local/hadoop/etc/hadoop  start nodemanager"
+ su - root -c "$HADOOP_INSTALL/sbin/hadoop-daemon.sh --config /usr/local/hadoop/etc/hadoop --script hdfs start datanode"
+ su - root -c "$HADOOP_INSTALL/sbin/yarn-daemons.sh --config /usr/local/hadoop/etc/hadoop  start nodemanager"
 }
 
 deamon() {

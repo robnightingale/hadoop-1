@@ -41,6 +41,6 @@
 
 <property>
 <name>mapreduce.jobhistory.principal</name>
-<value>hduser/hdfs-master.cloud.com@CLOUD.COM</value>
+<value>hduser/_HOST@CLOUD.COM</value>
 </property>
 </configuration>
