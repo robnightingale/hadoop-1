@@ -49,6 +49,7 @@ initializePrincipal() {
 startMaster() {
 su - hduser -c "$HADOOP_INSTALL/etc/hadoop/hadoop-env.sh"
 su - hduser -c "$HADOOP_INSTALL/sbin/hadoop-daemon.sh start namenode"
+su - hduser -c "$HADOOP_INSTALL/sbin/hadoop-daemon.sh start datanode"
 #su - root -c "$HADOOP_INSTALL/sbin/start-all.sh"
 # su - root -c "$HADOOP_INSTALL/sbin/mr-jobhistory-daemon.sh start historyserver --config /usr/local/hadoop/etc/hadoop"
 # su - root -c "$HADOOP_INSTALL/bin/hdfs dfs -mkdir -p /user/hduser"

@@ -58,7 +58,7 @@
 </property>
 <property>
 <name>dfs.datanode.http.address</name>
-<value>0.0.0.0:1006</value>
+<value>0.0.0.0:50020</value>
 </property>
 <property>
 <name>dfs.datanode.keytab.file</name>
@@ -67,10 +67,6 @@
 <property>
 <name>dfs.datanode.kerberos.principal</name>
 <value>hduser/_HOST@CLOUD.COM</value>
-</property>
-<property>
-<name>dfs.datanode.http.address</name>
-<value>0.0.0.0:1022</value>
 </property>
 <property>
 <name>dfs.datanode.https.address</name>
@@ -82,7 +78,15 @@
 </property>
 <property>
 <name>dfs.datanode.address</name>
-<value>0.0.0.0:1019</value>
+<value>0.0.0.0:50010</value>
+</property>
+<property>
+  <name>dfs.data.transfer.protection</name>
+  <value>integrity</value>
+</property>
+<property>
+  <name>dfs.http.policy</name>
+  <value>HTTPS_ONLY</value>
 </property>
 
 

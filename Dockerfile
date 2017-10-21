@@ -66,6 +66,8 @@ ADD config/core-site.xml /usr/local/hadoop/etc/hadoop/core-site.xml
 ADD config/httpfs-site.xml /usr/local/hadoop/etc/hadoop/httpfs-site.xml
 ADD config/yarn-site.xml /usr/local/hadoop/etc/hadoop/yarn-site.xml 
 ADD config/slaves /usr/local/hadoop/etc/hadoop/slaves
+ADD config/ssl-server.xml /usr/local/hadoop/etc/hadoop/ssl-server.xml
+ADD config/hduser.jks /usr/local/hadoop/etc/hadoop/hduser.jks
 
 #RUN $HADOOP_INSTALL/bin/hdfs namenode -format
 
@@ -107,10 +109,10 @@ ENV LD_LIBRARY_PATH /usr/local/lib:$HADOOP_INSTALL/lib/native:$LD_LIBRARY_PATH
 
 RUN mkdir -p /usr/lib/bigtop-utils/
 RUN cp /usr/bin/jsvc /usr/lib/bigtop-utils/
-RUN sed -i "s/\${HADOOP_SECURE_DN_USER}/hduser/g" /usr/local/hadoop/etc/hadoop/hadoop-env.sh &&\
-sed -i "/HADOOP_SECURE_DN_PID_DIR/ s/\${HADOOP_PID_DIR}/\/var\/run\/hadoop\/\$HADOOP_SECURE_DN_USER/g" /usr/local/hadoop/etc/hadoop/hadoop-env.sh &&\
-sed -i "s/\${HADOOP_LOG_DIR}\/\${HADOOP_HDFS_USER}/\/var\/log\/hadoop\/\$HADOOP_SECURE_DN_USER/g" /usr/local/hadoop/etc/hadoop/hadoop-env.sh &&\
-echo 'export JSVC_HOME=/usr/lib/bigtop-utils/' >> /usr/local/hadoop/etc/hadoop/hadoop-env.sh
+#RUN sed -i "s/\${HADOOP_SECURE_DN_USER}/hduser/g" /usr/local/hadoop/etc/hadoop/hadoop-env.sh &&\
+#sed -i "/HADOOP_SECURE_DN_PID_DIR/ s/\${HADOOP_PID_DIR}/\/var\/run\/hadoop\/\$HADOOP_SECURE_DN_USER/g" /usr/local/hadoop/etc/hadoop/hadoop-env.sh &&\
+#sed -i "s/\${HADOOP_LOG_DIR}\/\${HADOOP_HDFS_USER}/\/var\/log\/hadoop\/\$HADOOP_SECURE_DN_USER/g" /usr/local/hadoop/etc/hadoop/hadoop-env.sh &&\
+#echo 'export JSVC_HOME=/usr/lib/bigtop-utils/' >> /usr/local/hadoop/etc/hadoop/hadoop-env.sh
 
 
 RUN sudo mkdir -p /var/log/hadoop
