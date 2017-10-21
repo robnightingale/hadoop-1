@@ -38,8 +38,33 @@
 <name>dfs.namenode.kerberos.internal.spnego.principal</name>
 <value>HTTP/_HOST@CLOUD.COM</value>
 </property>
+<property>
+         <name>dfs.secondary.namenode.kerberos.principal</name>
+         <value>hduser/_HOST@CLOUD.COM</value>
+         <description>Kerberos principal name for the secondary NameNode.
+         </description>
+    </property>
+<property>
+         <name>dfs.secondary.namenode.keytab.file</name>
+         <value>/etc/security/keytabs/hduser.keytab</value>
+         <description>
+         Combined keytab file containing the namenode service and host
+         principals.
+         </description>
+    </property>
 
+<property>
+         <!--cluster variant -->
+         <name>dfs.secondary.http.address</name>
+         <value>hdfs-master.cloud.com:50090</value>
+         <description>Address of secondary namenode web server</description>
+    </property>
 
+    <property>
+         <name>dfs.secondary.https.port</name>
+         <value>50490</value>
+         <description>The https port where secondary-namenode binds</description>
+    </property>
 <property>
 <name>dfs.web.authentication.kerberos.principal</name>
 <value>HTTP/_HOST@CLOUD.COM</value>
