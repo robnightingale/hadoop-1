@@ -10,20 +10,20 @@ startSsh() {
 }
 
 setEnvVariable() {
- echo 'export JAVA_HOME=/usr/local/jdk' >> /home/users/$1/.bashrc
- echo 'export PATH=$PATH:$JAVA_HOME/bin' >> /home/users/$1/.bashrc
- echo 'export HADOOP_INSTALL=/usr/local/hadoop' >> /home/users/$1/.bashrc
- echo 'export PATH=$PATH:$HADOOP_INSTALL/bin' >> /home/users/$1/.bashrc
- echo 'export PATH=$PATH:$HADOOP_INSTALL/sbin' >> /home/users/$1/.bashrc
- echo 'export HADOOP_MAPRED_HOME=$HADOOP_INSTALL' >> /home/users/$1/.bashrc
- echo 'export HADOOP_COMMON_HOME=$HADOOP_INSTALL' >> /home/users/$1/.bashrc
- echo 'export HADOOP_HDFS_HOME=$HADOOP_INSTALL' >> /home/users/$1/.bashrc
- echo 'export YARN_HOME=$HADOOP_INSTALL' >> /home/users/$1/.bashrc
- echo 'export HADOOP_COMMON_LIB_NATIVE_DIR=$HADOOP_INSTALL/lib/native' >> /home/users/$1/.bashrc
- echo 'export HADOOP_OPTS="-Djava.library.path=$HADOOP_INSTALL/lib/native"' >> /home/users/$1/.bashrc
- echo 'export HADOOP_CONF_DIR=/usr/local/hadoop/etc/hadoop' >> /home/users/$1/.bashrc
- echo 'export LD_LIBRARY_PATH=/usr/local/lib:$HADOOP_INSTALL/lib/native:$LD_LIBRARY_PATH' >> /home/users/$1/.bashrc
- echo 'cd /usr/local/hadoop' >> /home/users/$1/.bashrc
+ echo 'export JAVA_HOME=/usr/local/jdk' >> /etc/bash.bashrc
+ echo 'export PATH=$PATH:$JAVA_HOME/bin' >> /etc/bash.bashrc
+ echo 'export HADOOP_INSTALL=/usr/local/hadoop' >> /etc/bash.bashrc
+ echo 'export PATH=$PATH:$HADOOP_INSTALL/bin' >> /etc/bash.bashrc
+ echo 'export PATH=$PATH:$HADOOP_INSTALL/sbin' >> /etc/bash.bashrc
+ echo 'export HADOOP_MAPRED_HOME=$HADOOP_INSTALL' >> /etc/bash.bashrc
+ echo 'export HADOOP_COMMON_HOME=$HADOOP_INSTALL' >> /etc/bash.bashrc
+ echo 'export HADOOP_HDFS_HOME=$HADOOP_INSTALL' >> /etc/bash.bashrc
+ echo 'export YARN_HOME=$HADOOP_INSTALL' >> /etc/bash.bashrc
+ echo 'export HADOOP_COMMON_LIB_NATIVE_DIR=$HADOOP_INSTALL/lib/native' >> /etc/bash.bashrc
+ echo 'export HADOOP_OPTS="-Djava.library.path=$HADOOP_INSTALL/lib/native"' >> /etc/bash.bashrc
+ echo 'export HADOOP_CONF_DIR=/usr/local/hadoop/etc/hadoop' >> /etc/bash.bashrc
+ echo 'export LD_LIBRARY_PATH=/usr/local/lib:$HADOOP_INSTALL/lib/native:$LD_LIBRARY_PATH' >> /etc/bash.bashrc
+ echo 'cd /usr/local/hadoop' >> /etc/bash.bashrc
 }
 
 changeOwner() {
@@ -100,7 +100,7 @@ main() {
     startSsh
     initializePrincipal
     changeOwner
-    #setEnvVariable hduser
+    setEnvVariable
     initialize $2
     touch /hadoop_initialized
   else
