@@ -9,6 +9,8 @@
                 <description>A base for other temporary directories.</description>
         </property>
 
+<!-- Hadoope web sercurity using spengo-->
+
     <property>
          <name>hadoop.security.authentication</name>
          <value>kerberos</value>
@@ -19,5 +21,62 @@
          <name>hadoop.security.authorization</name>
          <value>true</value>
          <description>Enable authorization for different protocols.</description>
+    </property>
+ <property>
+         <name>hadoop.http.authentication.simple.anonymous.allowed</name>
+         <value>false</value>
+    </property>
+ <property>
+         <name>hadoop.http.authentication.signature.secret.file</name>
+         <value>/etc/security/http_secret</value>
+    </property>
+ <property>
+         <name>hadoop.http.authentication.type</name>
+         <value>kerberos</value>
+    </property>
+ <property>
+         <name>hadoop.http.authentication.kerberos.keytab</name>
+         <value>/etc/security/keytabs/hduser.keytab</value>
+    </property>
+ <property>
+         <name>hadoop.http.authentication.kerberos.principal</name>
+         <value>HTTP/_HOST@CLOUD.COM</value>
+    </property>
+ <property>
+         <name>hadoop.http.filter.initializers</name>
+         <value>org.apache.hadoop.security.AuthenticationFilterInitializer</value>
+    </property>
+ <property>
+         <name>hadoop.http.authentication.cookie.domain</name>
+         <value>CLOUD.COM</value>
+    </property>
+
+<!-- End -->
+
+
+
+<property>
+        <name>hadoop.ssl.require.client.cert</name>
+        <value>false</value>
+    </property>
+    <property>
+        <name>hadoop.ssl.hostname.verifier</name>
+        <value>ALLOW_ALL</value>
+    </property>
+    <property>
+        <name>hadoop.ssl.keystores.factory.class</name>
+        <value>org.apache.hadoop.security.ssl.FileBasedKeyStoresFactory</value>
+    </property>
+    <property>
+        <name>hadoop.ssl.server.conf</name>
+        <value>ssl-server.xml</value>
+    </property>
+    <property>
+        <name>hadoop.ssl.client.conf</name>
+        <value>ssl-client.xml</value>
+    </property>
+    <property>
+        <name>hadoop.rpc.protection</name>
+        <value>privacy</value>
     </property>
 </configuration>

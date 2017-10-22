@@ -56,7 +56,7 @@
 <property>
          <!--cluster variant -->
          <name>dfs.secondary.http.address</name>
-         <value>hdfs-master.cloud.com:50090</value>
+         <value>HOSTNAME:50090</value>
          <description>Address of secondary namenode web server</description>
     </property>
 
@@ -69,7 +69,13 @@
 <name>dfs.web.authentication.kerberos.principal</name>
 <value>HTTP/_HOST@CLOUD.COM</value>
 </property>
-
+ <property>
+         <name>dfs.web.authentication.kerberos.keytab</name>
+         <value>/etc/security/keytabs/hduser.keytab</value>
+         <description>The Kerberos keytab file with the credentials for the HTTP
+         Kerberos principal used by Hadoop-Auth in the HTTP endpoint.
+         </description>
+    </property>
 <property>
 <name>dfs.block.access.token.enable</name>
 <value>true</value>
@@ -105,10 +111,15 @@
 <name>dfs.datanode.address</name>
 <value>0.0.0.0:50010</value>
 </property>
-<property>
+<!--property>
+         <name>dfs.namenode.https-address</name>
+         <value>HOSTNAME:50470</value>
+     </property-->
+
+<!--property>
   <name>dfs.data.transfer.protection</name>
   <value>integrity</value>
-</property>
+</property-->
 <property>
   <name>dfs.http.policy</name>
   <value>HTTPS_ONLY</value>
@@ -118,5 +129,35 @@
          <value>hadoop</value>
          <description>The name of the group of super-users.</description>
     </property>
+<property>
+         <name>dfs.namenode.kerberos.internal.spnego.principal</name>
+         <value>${dfs.web.authentication.kerberos.principal}</value>
+    </property>
 
+    <property>
+         <name>dfs.secondary.namenode.kerberos.internal.spnego.principal</name>
+         <value>${dfs.web.authentication.kerberos.principal}</value>
+     </property>
+
+     <property>
+         <name>dfs.data.transfer.protection</name>
+         <value>authentication</value>
+     </property>
+     <property>
+         <name>dfs.encrypt.data.transfer</name>
+         <value>true</value>
+     </property>
+<property>
+         <name>dfs.client.https.need-auth</name>
+         <value>false</value>
+     </property>
+<property>
+ <name>dfs.secondary.namenode.kerberos.http.principal</name>
+ <value>HTTP/_HOST@CLOUD.COM</value>
+</property>
+ <!--property>
+         <name>dfs.https.port</name>
+         <value>50470</value>
+         <description>The https port where namenode binds</description>
+    </property-->
 </configuration>

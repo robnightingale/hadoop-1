@@ -3,7 +3,7 @@
 [[ "TRACE" ]] && set -x
 
 : ${HADOOP_INSTALL:=/usr/local/hadoop}
-
+: ${HDFS:=hdfs-master.cloud.com}
 startSsh() {
  echo -e "Starting SSHD service"
  /usr/sbin/sshd
@@ -26,7 +26,8 @@ setEnvVariable() {
  echo 'export LD_LIBRARY_PATH=/usr/local/lib:$HADOOP_INSTALL/lib/native:$LD_LIBRARY_PATH' >> /etc/bash.bashrc
  echo 'cd /usr/local/hadoop' >> /etc/bash.bashrc
  sed -i "s/_HOST/$fqdn/g" $HADOOP_INSTALL/etc/hadoop/yarn-site.xml
- sed -i "s/_HOST/$fqdn/g" $HADOOP_INSTALL/etc/hadoop/mapred-site.xml 
+ sed -i "s/_HOST/$fqdn/g" $HADOOP_INSTALL/etc/hadoop/mapred-site.xml
+ sed -i "s/HOSTNAME/$HDFS/" $HADOOP_INSTALL/etc/hadoop/hdfs-site.xml 
 }
 
 changeOwner() {
@@ -112,6 +113,8 @@ main() {
     startSsh
     initialize $2
   fi
+  tail -f $HADOOP_INSTALL/logs/hadoop-root-namenode-hdfs-master.cloud.com.log mapred-root-historyserver-hdfs-master.cloud.com.log yarn-root-resourcemanager-hdfs-master.cloud.com.log httpfs.log hadoop-root-datanode-hdfs-master.cloud.com.log yarn-root-nodemanager-hdfs-master.cloud.com.log hadoop-root-secondarynamenode-hdfs-master.cloud.com.log
+
   if [[ $1 == "-d" ]]; then
    deamon
   fi

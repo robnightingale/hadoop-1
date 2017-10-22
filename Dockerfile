@@ -67,6 +67,7 @@ ADD config/httpfs-site.xml /usr/local/hadoop/etc/hadoop/httpfs-site.xml
 ADD config/yarn-site.xml /usr/local/hadoop/etc/hadoop/yarn-site.xml 
 ADD config/slaves /usr/local/hadoop/etc/hadoop/slaves
 ADD config/ssl-server.xml /usr/local/hadoop/etc/hadoop/ssl-server.xml
+ADD config/ssl-client.xml /usr/local/hadoop/etc/hadoop/ssl-client.xml
 ADD config/hduser.jks /usr/local/hadoop/etc/hadoop/hduser.jks
 RUN echo 'yarn.nodemanager.linux-container-executor.group=hadoop\nbanned.users=bin\nmin.user.id=500\nallowed.system.users=hduser' > $HADOOP_INSTALL/etc/hadoop/container-executor.cfg
 RUN sed -i '/# resolve links/ s/^/export JAVA_HOME=\/usr\/local\/jdk\n/' $HADOOP_INSTALL/sbin/httpfs.sh
@@ -118,10 +119,17 @@ RUN cp /usr/bin/jsvc /usr/lib/bigtop-utils/
 
 RUN sudo mkdir -p /var/log/hadoop
 RUN sudo mkdir -p /var/run/hadoop
-
 RUN addgroup hadoop
+
+RUN dd if=/dev/urandom of=/etc/security/http_secret bs=1024 count=1
+RUN chown root:hadoop /etc/security/http_secret
+RUN chmod 440 /etc/security/http_secret
+
 # Hdfs ports
 EXPOSE 50010 50020 50070 50075 50090 8020 9000 54310
+
+#Hdfs SSL port
+EXPOSE 50470 50475
 
 # httpfs port
 EXPOSE 14000
