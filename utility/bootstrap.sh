@@ -27,7 +27,8 @@ setEnvVariable() {
  echo 'cd /usr/local/hadoop' >> /etc/bash.bashrc
  sed -i "s/_HOST/$fqdn/g" $HADOOP_INSTALL/etc/hadoop/yarn-site.xml
  sed -i "s/_HOST/$fqdn/g" $HADOOP_INSTALL/etc/hadoop/mapred-site.xml
- sed -i "s/HOSTNAME/$HDFS/" $HADOOP_INSTALL/etc/hadoop/hdfs-site.xml 
+ sed -i "s/HOSTNAME/$HDFS/" $HADOOP_INSTALL/etc/hadoop/hdfs-site.xml
+ sed -i "s/HOSTNAME/$HDFS/" $HADOOP_INSTALL/etc/hadoop/httpfs-site.xml 
 }
 
 changeOwner() {
