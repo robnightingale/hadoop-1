@@ -8,9 +8,7 @@
                 <value>/app/hadoop/tmp</value>
                 <description>A base for other temporary directories.</description>
         </property>
-
-<!-- Hadoope web sercurity using spengo-->
-
+<!-- Enable Kerberos authentication-->
     <property>
          <name>hadoop.security.authentication</name>
          <value>kerberos</value>
@@ -22,46 +20,20 @@
          <value>true</value>
          <description>Enable authorization for different protocols.</description>
     </property>
- <property>
-         <name>hadoop.http.authentication.simple.anonymous.allowed</name>
-         <value>false</value>
-    </property>
- <property>
-         <name>hadoop.http.authentication.signature.secret.file</name>
-         <value>/etc/security/http_secret</value>
-    </property>
- <property>
-         <name>hadoop.http.authentication.type</name>
-         <value>kerberos</value>
-    </property>
- <property>
-         <name>hadoop.http.authentication.kerberos.keytab</name>
-         <value>/etc/security/keytabs/hduser.keytab</value>
-    </property>
- <property>
-         <name>hadoop.http.authentication.kerberos.principal</name>
-         <value>HTTP/_HOST@CLOUD.COM</value>
-    </property>
- <property>
-         <name>hadoop.http.filter.initializers</name>
-         <value>org.apache.hadoop.security.AuthenticationFilterInitializer</value>
-    </property>
- <property>
-         <name>hadoop.http.authentication.cookie.domain</name>
-         <value>CLOUD.COM</value>
-    </property>
+<!-- Hadoope web sercurity using spengo-->
 
 <!-- End -->
 
-
+<!-- Enable SSL -->
 
 <property>
         <name>hadoop.ssl.require.client.cert</name>
         <value>false</value>
     </property>
+<!-- Inorder to skip hostname check from the certificate, keep it ALLOW_ALL--> 
     <property>
         <name>hadoop.ssl.hostname.verifier</name>
-        <value>ALLOW_ALL</value>
+        <value>DEFAULT</value>
     </property>
     <property>
         <name>hadoop.ssl.keystores.factory.class</name>

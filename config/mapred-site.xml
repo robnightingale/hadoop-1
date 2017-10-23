@@ -43,4 +43,11 @@
 <name>mapreduce.jobhistory.principal</name>
 <value>hduser/_HOST@CLOUD.COM</value>
 </property>
+
+<!-- Enable SSL -->
+<property>
+      <name>mapreduce.shuffle.ssl.enabled</name>
+      <value>true</value>
+ </property>
+
 </configuration>

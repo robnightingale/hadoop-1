@@ -20,7 +20,7 @@
 
 <property>
   <name>ssl.client.truststore.location</name>
-  <value>/usr/local/hadoop/etc/hadoop/hduser.jks</value>
+  <value>/usr/local/hadoop/etc/hadoop/certs/DOMAIN_JKS</value>
   <description>Truststore to be used by clients like distcp. Must be
   specified.
   </description>
@@ -28,7 +28,7 @@
 
 <property>
   <name>ssl.client.truststore.password</name>
-  <value>hadoop</value>
+  <value>JKS_KEY_PASSWORD</value>
   <description>Optional. Default value is "".
   </description>
 </property>
@@ -49,7 +49,7 @@
 
 <property>
   <name>ssl.client.keystore.location</name>
-  <value>/usr/local/hadoop/etc/hadoop/hduser.jks</value>
+  <value>/usr/local/hadoop/etc/hadoop/certs/DOMAIN_JKS</value>
   <description>Keystore to be used by clients like distcp. Must be
   specified.
   </description>
@@ -57,14 +57,14 @@
 
 <property>
   <name>ssl.client.keystore.password</name>
-  <value>hadoop</value>
+  <value>JKS_KEY_PASSWORD</value>
   <description>Optional. Default value is "".
   </description>
 </property>
 
 <property>
   <name>ssl.client.keystore.keypassword</name>
-  <value>hadoop</value>
+  <value>JKS_KEY_PASSWORD</value>
   <description>Optional. Default value is "".
   </description>
 </property>

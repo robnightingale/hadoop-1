@@ -4,6 +4,7 @@
 
 : ${HADOOP_INSTALL:=/usr/local/hadoop}
 : ${HDFS:=hdfs-master.cloud.com}
+: ${KEY_PWD:=sumit@1234}
 startSsh() {
  echo -e "Starting SSHD service"
  /usr/sbin/sshd
@@ -11,6 +12,14 @@ startSsh() {
 
 setEnvVariable() {
  fqdn=$(hostname -f)
+ if [ $1 == 'master' ]
+ then
+ # keyfile=${fqdn}.jks
+ keyfile=`sed -n 1p /usr/local/hadoop/etc/hadoop/slaves`.jks
+ else
+  keyfile=`sed -n 1p /usr/local/hadoop/etc/hadoop/slaves`.jks
+ fi
+
  echo 'export JAVA_HOME=/usr/local/jdk' >> /etc/bash.bashrc
  echo 'export PATH=$PATH:$JAVA_HOME/bin' >> /etc/bash.bashrc
  echo 'export HADOOP_INSTALL=/usr/local/hadoop' >> /etc/bash.bashrc
@@ -29,6 +38,11 @@ setEnvVariable() {
  sed -i "s/_HOST/$fqdn/g" $HADOOP_INSTALL/etc/hadoop/mapred-site.xml
  sed -i "s/HOSTNAME/$HDFS/" $HADOOP_INSTALL/etc/hadoop/hdfs-site.xml
  sed -i "s/HOSTNAME/$HDFS/" $HADOOP_INSTALL/etc/hadoop/httpfs-site.xml 
+ sed -i "s/DOMAIN_JKS/$keyfile/" $HADOOP_INSTALL/etc/hadoop/ssl-server.xml
+ sed -i "s/DOMAIN_JKS/$keyfile/" $HADOOP_INSTALL/etc/hadoop/ssl-client.xml
+ sed -i "s/JKS_KEY_PASSWORD/$KEY_PWD/" $HADOOP_INSTALL/etc/hadoop/ssl-server.xml
+ sed -i "s/JKS_KEY_PASSWORD/$KEY_PWD/" $HADOOP_INSTALL/etc/hadoop/ssl-client.xml
+
 }
 
 changeOwner() {
@@ -107,7 +121,7 @@ main() {
     startSsh
     initializePrincipal
     changeOwner
-    setEnvVariable
+    setEnvVariable $2
     initialize $2
     touch /hadoop_initialized
   else
