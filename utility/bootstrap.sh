@@ -14,8 +14,7 @@ setEnvVariable() {
  fqdn=$(hostname -f)
  if [ $1 == 'master' ]
  then
- # keyfile=${fqdn}.jks
- keyfile=`sed -n 1p /usr/local/hadoop/etc/hadoop/slaves`.jks
+  keyfile=${fqdn}.jks
  else
   keyfile=`sed -n 1p /usr/local/hadoop/etc/hadoop/slaves`.jks
  fi
