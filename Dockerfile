@@ -11,10 +11,10 @@ RUN apt-get install -yq g++ autoconf automake libtool cmake zlib1g-dev pkg-confi
 
 WORKDIR /tmp/
 ARG REPOSITORY_HOST
-RUN wget http://www-eu.apache.org/dist/commons/daemon/source/commons-daemon-1.0.15-src.tar.gz &&\
-tar -xzvf commons-daemon-1.0.15-src.tar.gz
+RUN wget "$REPOSITORY_HOST"/repo/commons-daemon-1.1.0-src.tar.gz &&\
+tar -xzvf commons-daemon-1.1.0-src.tar.gz
 
-RUN cd commons-daemon-1.0.15-src/src/native/unix &&\
+RUN cd commons-daemon-1.1.0-src/src/native/unix &&\
 export CFLAGS=-m64 &&\
 export LDFLAGS=-m64 &&\
 ./configure --with-java=/usr/local/jdk &&\
@@ -49,10 +49,10 @@ ENV HADOOP_OPTS "-Djava.library.path=$HADOOP_INSTALL/lib/native"
 ENV HADOOP_CONF_DIR /usr/local/hadoop/etc/hadoop
 ENV JSVC_HOME /usr/bin
 
-RUN wget "$REPOSITORY_HOST"/repo/hadoop-2.6.5.tar.gz &&\
-tar -xzvf hadoop-2.6.5.tar.gz &&\
-mv /usr/local/hadoop-2.6.5 /usr/local/hadoop &&\
-rm -rf /usr/local/hadoop-2.6.5.tar.gz &&\
+RUN wget "$REPOSITORY_HOST"/repo/hadoop-2.9.0.tar.gz &&\
+tar -xzvf hadoop-2.9.0.tar.gz &&\
+mv /usr/local/hadoop-2.9.0 /usr/local/hadoop &&\
+rm -rf /usr/local/hadoop-2.9.0.tar.gz &&\
 java -version
 
 RUN sed -i 's/\(export JAVA_HOME=${JAVA_HOME}\)/#\1/' /usr/local/hadoop/etc/hadoop/hadoop-env.sh &&\
