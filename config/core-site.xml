@@ -1,54 +1,11 @@
 <configuration>
     <property>
         <name>fs.defaultFS</name>
-        <value>hdfs://hdfs-master.cloud.com:8020</value>
+        <value>hdfs://$NAME_SERVER:8020</value>
     </property>
 	<property>
                 <name>hadoop.tmp.dir</name>
                 <value>/app/hadoop/tmp</value>
                 <description>A base for other temporary directories.</description>
         </property>
-<!-- Enable Kerberos authentication-->
-    <property>
-         <name>hadoop.security.authentication</name>
-         <value>kerberos</value>
-         <description> Set the authentication for the cluster.
-         Valid values are: simple or kerberos.</description>
-    </property>
-    <property>
-         <name>hadoop.security.authorization</name>
-         <value>true</value>
-         <description>Enable authorization for different protocols.</description>
-    </property>
-<!-- Hadoope web sercurity using spengo-->
-
-<!-- End -->
-
-<!-- Enable SSL -->
-
-<property>
-        <name>hadoop.ssl.require.client.cert</name>
-        <value>false</value>
-    </property>
-<!-- Inorder to skip hostname check from the certificate, keep it ALLOW_ALL--> 
-    <property>
-        <name>hadoop.ssl.hostname.verifier</name>
-        <value>DEFAULT</value>
-    </property>
-    <property>
-        <name>hadoop.ssl.keystores.factory.class</name>
-        <value>org.apache.hadoop.security.ssl.FileBasedKeyStoresFactory</value>
-    </property>
-    <property>
-        <name>hadoop.ssl.server.conf</name>
-        <value>ssl-server.xml</value>
-    </property>
-    <property>
-        <name>hadoop.ssl.client.conf</name>
-        <value>ssl-client.xml</value>
-    </property>
-    <property>
-        <name>hadoop.rpc.protection</name>
-        <value>privacy</value>
-    </property>
 </configuration>

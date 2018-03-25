@@ -33,29 +33,4 @@
   <name>httpfs.proxyuser.hduser.groups</name>
   <value>*</value>
 </property>
-<property>
-  <name>httpfs.authentication.type</name>
-  <value>kerberos</value>
-</property>
-
-<property>
-  <name>httpfs.hadoop.authentication.type</name>
-  <value>kerberos</value>
-</property>
-<property>
-  <name>httpfs.authentication.kerberos.principal</name>
-  <value>HTTP/HOSTNAME@CLOUD.COM</value>
-</property>
-<property>
-  <name>httpfs.authentication.kerberos.keytab</name>
-  <value>/etc/security/keytabs/hduser.keytab</value>
-</property>
-<property>
-  <name>httpfs.hadoop.authentication.kerberos.principal</name>
-  <value>hduser/HOSTNAME@CLOUD.COM</value>
-</property>
-<property>
-  <name>httpfs.hadoop.authentication.kerberos.keytab</name>
-  <value>/etc/security/keytabs/hduser.keytab</value>
-</property>
 </configuration>

@@ -18,7 +18,7 @@
 
 	<property>
 		<name>mapred.job.tracker</name>
-		<value>hdfs-master:54311</value>
+		<value>$HDFS_MASTER:54311</value>
 		<description>The host and port that the MapReduce job tracker runs
 		at.  If "local", then jobs are run in-process as a single map
 		and reduce task.
@@ -31,23 +31,7 @@
 </property>
 <property>
   <name>mapreduce.jobhistory.address</name>
-  <value>hdfs-master:10020</value>
+  <value>$HDFS_MASTER:10020</value>
   <description>Host and port for Job History Server (default 0.0.0.0:10020)</description>
 </property>
-<property>
-<name>mapreduce.jobhistory.keytab</name>
-<value>/etc/security/keytabs/hduser.keytab</value>
-</property>
-
-<property>
-<name>mapreduce.jobhistory.principal</name>
-<value>hduser/_HOST@CLOUD.COM</value>
-</property>
-
-<!-- Enable SSL -->
-<property>
-      <name>mapreduce.shuffle.ssl.enabled</name>
-      <value>true</value>
- </property>
-
 </configuration>

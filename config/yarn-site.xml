@@ -17,7 +17,7 @@
 </property>
 <property>
  <name>yarn.resourcemanager.hostname</name>
- <value>hdfs-master</value>
+ <value>$HDFS_MASTER</value>
  <description>Yarn Config</description>
 </property>
 <property>
@@ -30,56 +30,17 @@
     </property>
     <property>
         <name>yarn.resourcemanager.resource-tracker.address</name>
-        <value>hdfs-master:8025</value>
+        <value>$HDFS_MASTER:8025</value>
     </property>
     <property>
         <name>yarn.resourcemanager.scheduler.address</name>
-        <value>hdfs-master:8030</value>
+        <value>$HDFS_MASTER:8030</value>
     </property>
 
 <property> 
 <name>yarn.app.mapreduce.am.job.client.port-range</name>
 <value>56000-56020</value>
 </property>
-<!-- yarn process -->
-
-<property>
-<name>yarn.nodemanager.container-executor.class</name>
-<value>org.apache.hadoop.yarn.server.nodemanager.LinuxContainerExecutor</value>
-</property>
-<property>
-<name>yarn.nodemanager.linux-container-executor.group</name>
-<value>hduser</value>
-</property>
-
-
-<!-- resource manager secure configuration info -->
-
-<property>
-<name>yarn.resourcemanager.principal</name>
-<value>hduser/_HOST@CLOUD.COM</value>
-</property>
-
-<property>
-<name>yarn.resourcemanager.keytab</name>
-<value>/etc/security/keytabs/hduser.keytab</value>
-</property>
-
-<!-- NodeManager -->
-
-
-
-<property>
-<name>yarn.nodemanager.principal</name>
-<value>hduser/_HOST@CLOUD.COM</value>
-</property>
-
-<property>
-<name>yarn.nodemanager.keytab</name>
-<value>/etc/security/keytabs/hduser.keytab</value>
-</property>
-
-
 
 
 </configuration>

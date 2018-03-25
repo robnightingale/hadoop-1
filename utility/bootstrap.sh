@@ -2,21 +2,44 @@
 
 [[ "TRACE" ]] && set -x
 
+source /configg/hadoop/config
+
 : ${HADOOP_INSTALL:=/usr/local/hadoop}
-: ${HDFS:=hdfs-master.cloud.com}
+: ${HDFS:=hdfs-master.default.svc.cloud.uat}
 : ${KEY_PWD:=sumit@1234}
+: ${ENABLE_HADOOP_SSL:=false}
+: ${ENABLE_KERBEROS:=false}
+: ${ENABLE_KUBERNETES:=false}
+: ${NAME_SERVER:=hdfs-master.default.svc.cloud.uat}
+: ${HDFS_MASTER:=hdfs-master.default.svc.cloud.uat}
+: ${REALM:=$(echo $DOMAIN_NAME | tr 'a-z' 'A-Z')}
+
 startSsh() {
  echo -e "Starting SSHD service"
  /usr/sbin/sshd
 }
 
+fix_hostname() {
+  #sed -i "/^hosts:/ s/ *files dns/ dns files/" /etc/nsswitch.conf
+  if [ "$ENABLE_KUBERNETES" == 'true' ]
+  then
+   cp /etc/hosts ~/tmp
+   sed -i "s/\([0-9\.]*\)\([\t ]*\)\($(hostname -f)\)/\1 $(hostname -f).$DOMAIN_REALM \3/"  ~/tmp
+   cp -f ~/tmp /etc/hosts
+  fi
+}
+
 setEnvVariable() {
- fqdn=$(hostname -f)
- if [ $1 == 'master' ]
- then
-  keyfile=${fqdn}.jks
- else
-  keyfile=`sed -n 1p /usr/local/hadoop/etc/hadoop/slaves`.jks
+
+ if [ "$ENABLE_HADOOP_SSL" == 'true' ]
+ then 
+  fqdn=$(hostname -f)
+  if [ $1 == 'master' ]
+  then
+   keyfile=${fqdn}.jks
+  else
+   keyfile=`sed -n 1p /usr/local/hadoop/etc/hadoop/slaves`.jks
+  fi
  fi
 
  echo 'export JAVA_HOME=/usr/local/jdk' >> /etc/bash.bashrc
@@ -33,51 +56,150 @@ setEnvVariable() {
  echo 'export HADOOP_CONF_DIR=/usr/local/hadoop/etc/hadoop' >> /etc/bash.bashrc
  echo 'export LD_LIBRARY_PATH=/usr/local/lib:$HADOOP_INSTALL/lib/native:$LD_LIBRARY_PATH' >> /etc/bash.bashrc
  echo 'cd /usr/local/hadoop' >> /etc/bash.bashrc
- sed -i "s/_HOST/$fqdn/g" $HADOOP_INSTALL/etc/hadoop/yarn-site.xml
- sed -i "s/_HOST/$fqdn/g" $HADOOP_INSTALL/etc/hadoop/mapred-site.xml
- sed -i "s/HOSTNAME/$HDFS/" $HADOOP_INSTALL/etc/hadoop/hdfs-site.xml
- sed -i "s/HOSTNAME/$HDFS/" $HADOOP_INSTALL/etc/hadoop/httpfs-site.xml 
- sed -i "s/DOMAIN_JKS/$keyfile/" $HADOOP_INSTALL/etc/hadoop/ssl-server.xml
- sed -i "s/DOMAIN_JKS/$keyfile/" $HADOOP_INSTALL/etc/hadoop/ssl-client.xml
- sed -i "s/JKS_KEY_PASSWORD/$KEY_PWD/" $HADOOP_INSTALL/etc/hadoop/ssl-server.xml
- sed -i "s/JKS_KEY_PASSWORD/$KEY_PWD/" $HADOOP_INSTALL/etc/hadoop/ssl-client.xml
+
+
+ if [ "$ENABLE_KERBEROS" == 'false' ]
+ then
+   cp /tmp/config/hadoop/core-site.xml /usr/local/hadoop/etc/hadoop/core-site.xml
+   sedFile /usr/local/hadoop/etc/hadoop/core-site.xml
+
+   cp /tmp/config/hadoop/hdfs-site.xml /usr/local/hadoop/etc/hadoop/hdfs-site.xml
+   sedFile /usr/local/hadoop/etc/hadoop/hdfs-site.xml
+
+   cp /tmp/config/hadoop/mapred-site.xml /usr/local/hadoop/etc/hadoop/mapred-site.xml
+   sedFile /usr/local/hadoop/etc/hadoop/mapred-site.xml 
+
+   cp /tmp/config/hadoop/yarn-site.xml /usr/local/hadoop/etc/hadoop/yarn-site.xml
+   sedFile /usr/local/hadoop/etc/hadoop/yarn-site.xml
+
+   cp /tmp/config/hadoop/httpfs-site.xml /usr/local/hadoop/etc/hadoop/httpfs-site.xml
+   sedFile /usr/local/hadoop/etc/hadoop/httpfs-site.xml
+ elif [ "$ENABLE_KERBEROS" == 'true' ]
+ then
+
+   enableSecureLog
+
+   cp /tmp/config/hadoop/core-site.xml /usr/local/hadoop/etc/hadoop/core-site.xml
+   cp /tmp/config/hadoop/hdfs-site.xml /usr/local/hadoop/etc/hadoop/hdfs-site.xml
+   cp /tmp/config/hadoop/mapred-site.xml /usr/local/hadoop/etc/hadoop/mapred-site.xml
+   cp /tmp/config/hadoop/yarn-site.xml /usr/local/hadoop/etc/hadoop/yarn-site.xml
+   cp /tmp/config/hadoop/httpfs-site.xml /usr/local/hadoop/etc/hadoop/httpfs-site.xml
+   
+   kerberizeNameNodeSerice
+   kerberizeSecondaryNamenodeService
+   kerberizeDataNodeService
+   kerberizeYarnService
+   kerberizeHttpfsService
+   if [ "$ENABLE_HADOOP_SSL" == 'true' ]
+   then
+    enableSslService
+   fi
+
+   sedFile /usr/local/hadoop/etc/hadoop/core-site.xml
+   sedFile /usr/local/hadoop/etc/hadoop/hdfs-site.xml
+   sedFile /usr/local/hadoop/etc/hadoop/mapred-site.xml
+   sedFile /usr/local/hadoop/etc/hadoop/yarn-site.xml
+   sedFile /usr/local/hadoop/etc/hadoop/httpfs-site.xml   
+ fi
 
 }
 
+kerberizeHttpfsService(){
+   /utility/hadoop/kerberizeHttpfs.sh /usr/local/hadoop/etc/hadoop/httpfs-site.xml
+}
+
+enableSslService(){
+ /utility/hadoop/enableSSL.sh /usr/local/hadoop/etc/hadoop/hdfs-site.xml 
+ /utility/hadoop/enableSSL.sh /usr/local/hadoop/etc/hadoop/mapred-site.xml
+ #On secure datanodes, user to run the datanode as after dropping privileges
+ sed -i "/HADOOP_SECURE_DN_USER=hduser/ s/hduser//g" /usr/local/hadoop/etc/hadoop/hadoop-env.sh 
+}
+
+kerberizeNameNodeSerice(){
+
+   /utility/hadoop/kerberizeNamenode.sh /usr/local/hadoop/etc/hadoop/core-site.xml
+   /utility/hadoop/kerberizeNamenode.sh /usr/local/hadoop/etc/hadoop/hdfs-site.xml
+}
+
+kerberizeSecondaryNamenodeService(){
+   /utility/hadoop/kerberizeSecondarynode.sh /usr/local/hadoop/etc/hadoop/hdfs-site.xml
+}
+
+kerberizeDataNodeService(){
+   /utility/hadoop/kerberizeDatanode.sh /usr/local/hadoop/etc/hadoop/hdfs-site.xml
+}
+
+kerberizeYarnService(){
+  /utility/hadoop/kerberizeYarn.sh /usr/local/hadoop/etc/hadoop/mapred-site.xml
+  /utility/hadoop/kerberizeYarn.sh /usr/local/hadoop/etc/hadoop/yarn-site.xml
+  echo 'yarn.nodemanager.linux-container-executor.group=hadoop
+banned.users=bin
+min.user.id=500
+allowed.system.users=hduser' > $HADOOP_INSTALL/etc/hadoop/container-executor.cfg
+  chmod 050 /usr/local/hadoop/bin/container-executor
+  chmod u+s /usr/local/hadoop/bin/container-executor
+  chmod g+s /usr/local/hadoop/bin/container-executor
+  su - root -c "$HADOOP_INSTALL/bin/container-executor"
+}
+
+
+enableSecureLog(){
+
+#Enable secure datanode
+sed -i "s/\${HADOOP_SECURE_DN_USER}/hduser/g" /usr/local/hadoop/etc/hadoop/hadoop-env.sh
+sed -i "/HADOOP_SECURE_DN_PID_DIR/ s/\${HADOOP_PID_DIR}/\/var\/run\/hadoop\/\$HADOOP_SECURE_DN_USER/g" /usr/local/hadoop/etc/hadoop/hadoop-env.sh
+sed -i 's/HADOOP_SECURE_DN_LOG_DIR/^#/g' /usr/local/hadoop/etc/hadoop/hadoop-env.sh
+echo 'export JSVC_HOME=/usr/bin' >> /usr/local/hadoop/etc/hadoop/hadoop-env.sh
+echo 'export HADOOP_SECURE_DN_LOG_DIR=/var/log/hadoop/$HADOOP_SECURE_DN_USER' >> /usr/local/hadoop/etc/hadoop/hadoop-env.sh
+}
+
+sedFile(){
+  filename=$1
+
+  sed -i "s/\$NAME_SERVER/$NAME_SERVER/" $filename
+  sed -i "s/\$HDFS_MASTER/$HDFS_MASTER/" $filename
+  sed -i "s/\$REALM/$REALM/" $filename
+  sed -i "s/_HOST/$(hostname -f)/g" $filename
+  sed -i "s/HOSTNAME/$HDFS/" $filename
+  sed -i "s/DOMAIN_JKS/$keyfile/" $filename
+  sed -i "s/DOMAIN_JKS/$keyfile/" $filename
+  sed -i "s/JKS_KEY_PASSWORD/$KEY_PWD/" $filename
+  sed -i "s/JKS_KEY_PASSWORD/$KEY_PWD/" $filename
+}
+
+
 changeOwner() {
- chown -R root:hadoop /app/hadoop/tmp
- chown -R root:hadoop /usr/local/hadoop_store
+ chown -R hduser:hadoop /app/hadoop/tmp
+ chown -R hduser:hadoop /usr/local/hadoop_store
  chown -R root:hadoop /usr/local/hadoop
- chmod 050 /usr/local/hadoop/bin/container-executor
- chmod u+s /usr/local/hadoop/bin/container-executor
- chmod g+s /usr/local/hadoop/bin/container-executor
- su - root -c "$HADOOP_INSTALL/bin/container-executor"
 }
 
 initializePrincipal() {
- kadmin -p root/admin -w admin -q "addprinc -pw sumit root@CLOUD.COM"
- kadmin -p root/admin -w admin -q "addprinc -randkey hduser/$(hostname -f)@CLOUD.COM"
- kadmin -p root/admin -w admin -q "addprinc -randkey HTTP/$(hostname -f)@CLOUD.COM"
+ kadmin -p root/admin -w admin -q "addprinc -pw sumit root@$REALM"
+ kadmin -p root/admin -w admin -q "addprinc -randkey hduser/$(hostname -f)@$REALM"
+ kadmin -p root/admin -w admin -q "addprinc -randkey HTTP/$(hostname -f)@$REALM"
  
- kadmin -p root/admin -w admin -q "xst -k hduser.keytab hduser/$(hostname -f)@CLOUD.COM HTTP/$(hostname -f)@CLOUD.COM"
+ kadmin -p root/admin -w admin -q "xst -k hduser.keytab hduser/$(hostname -f)@$REALM HTTP/$(hostname -f)@$REALM"
 
  mkdir -p /etc/security/keytabs
  mv hduser.keytab /etc/security/keytabs
- chmod 400 /etc/security/keytabs/hduser.keytab
+ chmod 440 /etc/security/keytabs/hduser.keytab
  chown root:hadoop /etc/security/keytabs/hduser.keytab
 }
 
 
 startMaster() {
-su - root -c "$HADOOP_INSTALL/etc/hadoop/hadoop-env.sh"
-su - root -c "$HADOOP_INSTALL/sbin/hadoop-daemon.sh start namenode"
-su - root -c "$HADOOP_INSTALL/sbin/hadoop-daemon.sh start secondarynamenode"
-su - root -c "$HADOOP_INSTALL/sbin/hadoop-daemon.sh start datanode"
-su - root -c "$HADOOP_INSTALL/sbin/yarn-daemon.sh start resourcemanager"
-su - root -c "$HADOOP_INSTALL/sbin/yarn-daemon.sh start nodemanager"
-#su - root -c "$HADOOP_INSTALL/sbin/start-all.sh"
+ su - root -c "$HADOOP_INSTALL/etc/hadoop/hadoop-env.sh"
+ su - root -c "$HADOOP_INSTALL/sbin/hadoop-daemon.sh start namenode"
+ su - root -c "$HADOOP_INSTALL/sbin/hadoop-daemon.sh start secondarynamenode"
+ su - root -c "$HADOOP_INSTALL/sbin/hadoop-daemon.sh start datanode"
+ su - root -c "$HADOOP_INSTALL/sbin/yarn-daemon.sh start resourcemanager"
+ su - root -c "$HADOOP_INSTALL/sbin/yarn-daemon.sh start nodemanager"
  su - root -c "$HADOOP_INSTALL/sbin/mr-jobhistory-daemon.sh start historyserver --config /usr/local/hadoop/etc/hadoop"
- kinit -k -t /etc/security/keytabs/hduser.keytab hduser/$(hostname -f)
+ if [ "$ENABLE_KERBEROS" == 'true' ]
+ then
+  kinit -k -t /etc/security/keytabs/hduser.keytab hduser/$(hostname -f)
+ fi
  su - root -c "$HADOOP_INSTALL/bin/hdfs dfs -mkdir -p /user/hduser"
  su - root -c "$HADOOP_INSTALL/bin/hdfs dfs -mkdir -p /user/hue"
  su - root -c "$HADOOP_INSTALL/bin/hdfs dfs -chmod g+w /user/hduser"
@@ -116,9 +238,21 @@ initialize() {
 
 main() {
  if [ ! -f /hadoop_initialized ]; then
-    /utility/ldap/bootstrap.sh
+    if [ "$ENABLE_KERBEROS" == 'false' ]
+    then
+      fix_hostname  
+    fi
+
+    if [ "$ENABLE_KERBEROS" == 'true' ]
+    then
+     /utility/ldap/bootstrap.sh
+    fi
     startSsh
-    initializePrincipal
+    if [ "$ENABLE_KERBEROS" == 'true' ]
+    then
+     initializePrincipal
+    fi
+
     changeOwner
     setEnvVariable $2
     initialize $2
@@ -127,7 +261,7 @@ main() {
     startSsh
     initialize $2
   fi
-  tail -f $HADOOP_INSTALL/logs/hadoop-root-namenode-hdfs-master.cloud.com.log mapred-root-historyserver-hdfs-master.cloud.com.log yarn-root-resourcemanager-hdfs-master.cloud.com.log httpfs.log hadoop-root-datanode-hdfs-master.cloud.com.log yarn-root-nodemanager-hdfs-master.cloud.com.log hadoop-root-secondarynamenode-hdfs-master.cloud.com.log
+  tail -f $HADOOP_INSTALL/logs/hadoop-root-namenode-$HDFS.log mapred-root-historyserver-$HDFS.log yarn-root-resourcemanager-$HDFS.log httpfs.log hadoop-root-datanode-$HDFS.log yarn-root-nodemanager-$HDFS.log hadoop-root-secondarynamenode-$HDFS.log
 
   if [[ $1 == "-d" ]]; then
    deamon

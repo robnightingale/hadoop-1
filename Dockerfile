@@ -1,4 +1,4 @@
-FROM sumit/maven:latest
+FROM sumit/java8:latest
 MAINTAINER Sumit Kumar Maji
 
 RUN apt-get update
@@ -11,7 +11,7 @@ RUN apt-get install -yq g++ autoconf automake libtool cmake zlib1g-dev pkg-confi
 
 WORKDIR /tmp/
 ARG REPOSITORY_HOST
-RUN wget "$REPOSITORY_HOST"/repo/commons-daemon-1.1.0-src.tar.gz &&\
+RUN wget "$REPOSITORY_HOST"/commons-daemon-1.1.0-src.tar.gz &&\
 tar -xzvf commons-daemon-1.1.0-src.tar.gz
 
 RUN cd commons-daemon-1.1.0-src/src/native/unix &&\
@@ -23,7 +23,7 @@ mv ./jsvc  /usr/bin/jsvc &&\
 which jsvc &&\
 jsvc -help
 
-RUN wget "$REPOSITORY_HOST"/repo/jce_policy-8.zip
+RUN wget "$REPOSITORY_HOST"/jce_policy-8.zip
 RUN unzip jce_policy-8.zip
 RUN cp UnlimitedJCEPolicyJDK8/local_policy.jar UnlimitedJCEPolicyJDK8/US_export_policy.jar $JAVA_HOME/jre/lib/security
 
@@ -49,7 +49,7 @@ ENV HADOOP_OPTS "-Djava.library.path=$HADOOP_INSTALL/lib/native"
 ENV HADOOP_CONF_DIR /usr/local/hadoop/etc/hadoop
 ENV JSVC_HOME /usr/bin
 
-RUN wget "$REPOSITORY_HOST"/repo/hadoop-2.9.0.tar.gz &&\
+RUN wget "$REPOSITORY_HOST"/hadoop-2.9.0.tar.gz &&\
 tar -xzvf hadoop-2.9.0.tar.gz &&\
 mv /usr/local/hadoop-2.9.0 /usr/local/hadoop &&\
 rm -rf /usr/local/hadoop-2.9.0.tar.gz &&\
@@ -60,20 +60,20 @@ sed -i '/export JAVA_HOME/ a\\nexport JAVA_HOME=/usr/local/jdk' /usr/local/hadoo
 mkdir -p /app/hadoop/tmp &&\
 mkdir -p /usr/local/hadoop_store/hdfs/namenode &&\
 mkdir -p /usr/local/hadoop_store/hdfs/datanode
-ADD config/hdfs-site.xml /usr/local/hadoop/etc/hadoop/hdfs-site.xml
-ADD config/mapred-site.xml /usr/local/hadoop/etc/hadoop/mapred-site.xml
-ADD config/core-site.xml /usr/local/hadoop/etc/hadoop/core-site.xml
-ADD config/httpfs-site.xml /usr/local/hadoop/etc/hadoop/httpfs-site.xml
-ADD config/yarn-site.xml /usr/local/hadoop/etc/hadoop/yarn-site.xml 
-ADD config/slaves /usr/local/hadoop/etc/hadoop/slaves
-ADD config/ssl-server.xml /usr/local/hadoop/etc/hadoop/ssl-server.xml
-ADD config/ssl-client.xml /usr/local/hadoop/etc/hadoop/ssl-client.xml
-ADD config/hduser.jks /usr/local/hadoop/etc/hadoop/hduser.jks
-RUN mkdir /usr/local/hadoop/etc/hadoop/certs
-ADD config/certs/* /usr/local/hadoop/etc/hadoop/certs/
-RUN chmod 644 /usr/local/hadoop/etc/hadoop/certs/*
-
-RUN echo 'yarn.nodemanager.linux-container-executor.group=hadoop\nbanned.users=bin\nmin.user.id=500\nallowed.system.users=hduser' > $HADOOP_INSTALL/etc/hadoop/container-executor.cfg
+RUN mkdir -p /tmp/config/hadoop/certs
+ADD config/hdfs-site.xml /tmp/config/hadoop/hdfs-site.xml
+ADD config/mapred-site.xml /tmp/config/hadoop/mapred-site.xml
+ADD config/core-site.xml /tmp/config/hadoop/core-site.xml
+ADD config/httpfs-site.xml /tmp/config/hadoop/httpfs-site.xml
+ADD config/yarn-site.xml /tmp/config/hadoop/yarn-site.xml 
+ADD config/slaves /tmp/config/hadoop/slaves
+ADD config/ssl-server.xml /tmp/config/hadoop/ssl-server.xml
+ADD config/ssl-client.xml /tmp/config/hadoop/ssl-client.xml
+ADD config/hduser.jks /tmp/config/hadoop/hduser.jks
+#RUN mkdir /usr/local/hadoop/etc/hadoop/certs
+ADD config/certs/* /tmp/config/hadoop/certs/
+#RUN chmod 644 /usr/local/hadoop/etc/hadoop/certs/*
+#RUN echo 'yarn.nodemanager.linux-container-executor.group=hadoop\nbanned.users=bin\nmin.user.id=500\nallowed.system.users=hduser' > $HADOOP_INSTALL/etc/hadoop/container-executor.cfg
 RUN sed -i '/# resolve links/ s/^/export JAVA_HOME=\/usr\/local\/jdk\n/' $HADOOP_INSTALL/sbin/httpfs.sh
 #RUN $HADOOP_INSTALL/bin/hdfs namenode -format
 
@@ -133,7 +133,7 @@ RUN chmod 440 /etc/security/http_secret
 
 
 # Hdfs ports
-EXPOSE 50010 50020 50070 50075 50090 8020 9000 54310
+EXPOSE 50010 50020 50070 50075 50090 8020 9000 54310 1006 10019
 
 #Hdfs SSL port
 EXPOSE 50470 50475
@@ -154,8 +154,25 @@ EXPOSE 56000-56020
 RUN mkdir -p /utility/hadoop
 ADD utility/bootstrap.sh /utility/hadoop/bootstrap.sh
 RUN chmod +x /utility/hadoop/bootstrap.sh
+ADD utility/kerberizeNamenode.sh /utility/hadoop/kerberizeNamenode.sh
+RUN chmod +x /utility/hadoop/kerberizeNamenode.sh
+ADD utility/kerberizeDatanode.sh /utility/hadoop/kerberizeDatanode.sh
+RUN chmod +x /utility/hadoop/kerberizeDatanode.sh
+ADD utility/kerberizeYarn.sh /utility/hadoop/kerberizeYarn.sh
+RUN chmod +x /utility/hadoop/kerberizeYarn.sh
+ADD utility/kerberizeSecondarynode.sh /utility/hadoop/kerberizeSecondarynode.sh
+RUN chmod +x /utility/hadoop/kerberizeSecondarynode.sh
+ADD utility/enableSSL.sh /utility/hadoop/enableSSL.sh
+RUN chmod +x /utility/hadoop/enableSSL.sh
+ADD utility/kerberizeHttpfs.sh /utility/hadoop/kerberizeHttpfs.sh
+RUN chmod +x /utility/hadoop/kerberizeHttpfs.sh
+
 RUN chown root:root /utility
 
+
+
+RUN mkdir -p /configg/hadoop
+ADD config/config /configg/hadoop/config
 #CMD ["/etc/bootstrap.sh", "-ssh"]
 #CMD /usr/sbin/sshd -D
-ENTRYPOINT ["/utility/hadoop/bootstrap.sh"]
+#ENTRYPOINT ["/utility/hadoop/bootstrap.sh"]
