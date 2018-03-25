@@ -76,8 +76,11 @@ setEnvVariable() {
    sedFile /usr/local/hadoop/etc/hadoop/httpfs-site.xml
  elif [ "$ENABLE_KERBEROS" == 'true' ]
  then
-
-   enableSecureLog
+   
+   if [ "$ENABLE_HADOOP_SSL" == 'false' ]
+   then
+     enableSecureLog
+   fi
 
    cp /tmp/config/hadoop/core-site.xml /usr/local/hadoop/etc/hadoop/core-site.xml
    cp /tmp/config/hadoop/hdfs-site.xml /usr/local/hadoop/etc/hadoop/hdfs-site.xml
@@ -93,6 +96,8 @@ setEnvVariable() {
    if [ "$ENABLE_HADOOP_SSL" == 'true' ]
    then
     enableSslService
+    sedFile $HADOOP_INSTALL/etc/hadoop/ssl-server.xml
+    sedFile $HADOOP_INSTALL/etc/hadoop/ssl-client.xml
    fi
 
    sedFile /usr/local/hadoop/etc/hadoop/core-site.xml
@@ -155,15 +160,21 @@ echo 'export HADOOP_SECURE_DN_LOG_DIR=/var/log/hadoop/$HADOOP_SECURE_DN_USER' >>
 
 sedFile(){
   filename=$1
-
+  PRIV1=1006
+  PRIV2=1019
+  if [ "$ENABLE_HADOOP_SSL" == 'true' ]
+  then
+    PRIV1=50020
+    PRIV2=50010
+  fi
   sed -i "s/\$NAME_SERVER/$NAME_SERVER/" $filename
   sed -i "s/\$HDFS_MASTER/$HDFS_MASTER/" $filename
+  sed -i "s/\$PRIV1/$PRIV1/" $filename
+  sed -i "s/\$PRIV2/$PRIV2/" $filename
   sed -i "s/\$REALM/$REALM/" $filename
   sed -i "s/_HOST/$(hostname -f)/g" $filename
   sed -i "s/HOSTNAME/$HDFS/" $filename
   sed -i "s/DOMAIN_JKS/$keyfile/" $filename
-  sed -i "s/DOMAIN_JKS/$keyfile/" $filename
-  sed -i "s/JKS_KEY_PASSWORD/$KEY_PWD/" $filename
   sed -i "s/JKS_KEY_PASSWORD/$KEY_PWD/" $filename
 }
 

@@ -16,7 +16,7 @@ then
     <\/property> \
     <property> \
          <name>dfs.datanode.http.address<\/name> \
-         <value>0.0.0.0:1006<\/value> \
+         <value>0.0.0.0:$PRIV1<\/value> \
     <\/property> \
     <property> \
          <name>dfs.datanode.keytab.file<\/name> \
@@ -36,7 +36,7 @@ then
     <\/property> \
     <property> \
          <name>dfs.datanode.address<\/name> \
-         <value>0.0.0.0:1019<\/value> \
+         <value>0.0.0.0:$PRIV2<\/value> \
     <\/property> \
     <property> \
          <name>dfs.permissions.supergroup<\/name> \
