@@ -95,6 +95,10 @@ setEnvVariable() {
    kerberizeHttpfsService
    if [ "$ENABLE_HADOOP_SSL" == 'true' ]
    then
+    mkdir -p /usr/local/hadoop/etc/hadoop/certs/
+    cp -R /tmp/config/hadoop/certs/* /usr/local/hadoop/etc/hadoop/certs/ 
+    cp /tmp/config/hadoop/ssl-server.xml $HADOOP_INSTALL/etc/hadoop/ssl-server.xml
+    cp /tmp/config/hadoop/ssl-client.xml $HADOOP_INSTALL/etc/hadoop/ssl-client.xml
     enableSslService
     sedFile $HADOOP_INSTALL/etc/hadoop/ssl-server.xml
     sedFile $HADOOP_INSTALL/etc/hadoop/ssl-client.xml
@@ -114,10 +118,10 @@ kerberizeHttpfsService(){
 }
 
 enableSslService(){
+ /utility/hadoop/enableSSL.sh /usr/local/hadoop/etc/hadoop/core-site.xml
  /utility/hadoop/enableSSL.sh /usr/local/hadoop/etc/hadoop/hdfs-site.xml 
  /utility/hadoop/enableSSL.sh /usr/local/hadoop/etc/hadoop/mapred-site.xml
  #On secure datanodes, user to run the datanode as after dropping privileges
- sed -i "/HADOOP_SECURE_DN_USER=hduser/ s/hduser//g" /usr/local/hadoop/etc/hadoop/hadoop-env.sh 
 }
 
 kerberizeNameNodeSerice(){

@@ -27,10 +27,6 @@ then
          <value>hduser\/_HOST@$REALM<\/value> \
     <\/property> \
     <property> \
-         <name>dfs.datanode.https.address<\/name> \
-         <value>0.0.0.0:50475<\/value> \
-    <\/property> \
-    <property> \
          <name>dfs.datanode.ipc.address<\/name> \
          <value>0.0.0.0:8010<\/value> \
     <\/property> \

@@ -25,6 +25,10 @@ then
          <name>dfs.client.https.need-auth<\/name> \
          <value>false<\/value> \
      <\/property> \
+     <property> \
+         <name>dfs.datanode.https.address<\/name> \
+         <value>0.0.0.0:50475<\/value> \
+    <\/property> \
 <!-- End --> \
 <\/configuration>/g' $filename
 elif [[ $filename = *"mapred-site.xml"* ]]
