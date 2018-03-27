@@ -2,16 +2,22 @@
 
 [[ "TRACE" ]] && set -x
 
-source /configg/hadoop/config
+if [ $ENABLE_KUBERNETES == 'false' -o $ENABLE_KUBERNETES == '' ]
+then
+  source /configg/hadoop/config
+fi
 
 : ${HADOOP_INSTALL:=/usr/local/hadoop}
-: ${HDFS:=hdfs-master.default.svc.cloud.uat}
+: ${MASTER:=hdfs-master}
+: ${DOMAIN_NAME:=cloud.com}
+: ${DOMAIN_REALM:=$DOMAIN_NAME}
+#: ${HDFS:=hdfs-master.cloud.com}
 : ${KEY_PWD:=sumit@1234}
 : ${ENABLE_HADOOP_SSL:=false}
 : ${ENABLE_KERBEROS:=false}
 : ${ENABLE_KUBERNETES:=false}
-: ${NAME_SERVER:=hdfs-master.default.svc.cloud.uat}
-: ${HDFS_MASTER:=hdfs-master.default.svc.cloud.uat}
+#: ${NAME_SERVER:=hdfs-master.cloud.com}
+: ${HDFS_MASTER:=$MASTER.$DOMAIN_NAME}
 : ${REALM:=$(echo $DOMAIN_NAME | tr 'a-z' 'A-Z')}
 
 startSsh() {
@@ -171,13 +177,13 @@ sedFile(){
     PRIV1=50020
     PRIV2=50010
   fi
-  sed -i "s/\$NAME_SERVER/$NAME_SERVER/" $filename
+  #sed -i "s/\$NAME_SERVER/$NAME_SERVER/" $filename
   sed -i "s/\$HDFS_MASTER/$HDFS_MASTER/" $filename
   sed -i "s/\$PRIV1/$PRIV1/" $filename
   sed -i "s/\$PRIV2/$PRIV2/" $filename
   sed -i "s/\$REALM/$REALM/" $filename
   sed -i "s/_HOST/$(hostname -f)/g" $filename
-  sed -i "s/HOSTNAME/$HDFS/" $filename
+  sed -i "s/HOSTNAME/$HDFS_MASTER/" $filename
   sed -i "s/DOMAIN_JKS/$keyfile/" $filename
   sed -i "s/JKS_KEY_PASSWORD/$KEY_PWD/" $filename
 }
@@ -243,7 +249,6 @@ sshPromt() {
 initialize() {
    if [[ $1 == 'master' ]] 
    then
-   su - root -c "$HADOOP_INSTALL/bin/hdfs namenode -format"
    startMaster
    elif [[ $1 == 'slave' ]]
    then
@@ -251,8 +256,8 @@ initialize() {
    fi
 }
 
-main() {
- if [ ! -f /hadoop_initialized ]; then
+setupHadoop(){
+  
     if [ "$ENABLE_KERBEROS" == 'false' ]
     then
       fix_hostname  
@@ -262,21 +267,61 @@ main() {
     then
      /utility/ldap/bootstrap.sh
     fi
-    startSsh
     if [ "$ENABLE_KERBEROS" == 'true' ]
     then
      initializePrincipal
     fi
 
     changeOwner
-    setEnvVariable $2
-    initialize $2
-    touch /hadoop_initialized
-  else
-    startSsh
-    initialize $2
+    setEnvVariable $1
+}
+
+# $1: -s ==> Only setup hadoop
+#     -a ==> Setup hadoop and start all the component
+main() {
+ if [ $1 == '-s' -a ! -f /hadoop_inistalled ]
+ then
+  setupHadoop $2
+  touch /hadoop_inistalled
+  exit 0
+ elif [ $1 == '-a' -a ! -f /hadoop_inistalled ]
+ then
+  setupHadoop $2
+  startSsh
+  if [ $2 == 'master' ]
+  then
+    su - root -c "$HADOOP_INSTALL/bin/hdfs namenode -format"
   fi
-  tail -f $HADOOP_INSTALL/logs/hadoop-root-namenode-$HDFS.log mapred-root-historyserver-$HDFS.log yarn-root-resourcemanager-$HDFS.log httpfs.log hadoop-root-datanode-$HDFS.log yarn-root-nodemanager-$HDFS.log hadoop-root-secondarynamenode-$HDFS.log
+  initialize $2
+  touch /hadoop_inistalled
+ elif [ ! -f /hadoop_inistalled ]
+ then
+  setupHadoop $2
+  startSsh
+  if [ $2 == 'master' ]
+  then
+    su - root -c "$HADOOP_INSTALL/bin/hdfs namenode -format"
+  fi
+  initialize $2
+  touch /hadoop_inistalled
+ elif [ -f /hadoop_inistalled ]
+ then
+  startSsh
+  initialize $2  
+ fi
+
+
+ #if [ ! -f /hadoop_initialized ]; then
+ #   setupHadoop $2
+ #   startSsh
+ #   su - root -c "$HADOOP_INSTALL/bin/hdfs namenode -format"
+ #   initialize $2
+ #   touch /hadoop_initialized
+ # else
+ #   startSsh
+ #   initialize $2
+ # fi
+  #tail -f $HADOOP_INSTALL/logs/hadoop-root-namenode-$HDFS.log mapred-root-historyserver-$HDFS.log yarn-root-resourcemanager-$HDFS.log httpfs.log hadoop-root-datanode-$HDFS.log yarn-root-nodemanager-$HDFS.log hadoop-root-secondarynamenode-$HDFS.log
 
   if [[ $1 == "-d" ]]; then
    deamon
