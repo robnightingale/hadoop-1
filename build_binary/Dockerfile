@@ -31,7 +31,7 @@ RUN apt-get update \
 
 #Install g++ for installing protobuf
 RUN apt-get upgrade \
-&& apt-get install build-essential
+&& apt-get install -yq build-essential
 
 RUN gcc -v
 RUN make -v
