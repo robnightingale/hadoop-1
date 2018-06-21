@@ -36,7 +36,7 @@ RUN apt-get upgrade -yq \
 RUN gcc -v
 RUN make -v
 
-RUN wget --no-check-certificate https://github.com/google/protobuf/archive/v3.6.0.tar.gz \
+RUN wget --no-check-certificate https://github.com/google/protobuf/releases/download/v3.6.0/protobuf-all-3.6.0.tar.gz \
 && tar -xf v3.6.0.tar.gz \
 && cd protobuf-3.6.0 \
 && ./configure \
