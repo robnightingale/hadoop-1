@@ -30,8 +30,8 @@ RUN apt-get update \
 && apt-get install -yq zip
 
 #Install g++ for installing protobuf
-RUN apt-get upgrade
-RUN apt-get install -yq build-essential
+RUN apt-get upgrade -yq \
+&& apt-get install -yq build-essential
 
 RUN gcc -v
 RUN make -v
