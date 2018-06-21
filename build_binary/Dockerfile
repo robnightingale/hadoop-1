@@ -37,4 +37,8 @@ RUN gcc -v
 RUN make -v
 
 RUN wget --no-check-certificate https://github.com/google/protobuf/archive/v3.6.0.tar.gz \
-&& tar -xf v3.6.0.tar.gz
+&& tar -xf v3.6.0.tar.gz \
+&& cd protobuf-3.6.0 \
+&& ./configure
+&& make
+&& make install
