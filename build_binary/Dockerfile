@@ -1,4 +1,4 @@
-from master.cloud.com/base
+from master.cloud.com:5000/base
 MAINTAINER Sumit Kumar Maji
 
 ARG REPOSITORY_HOST
@@ -35,3 +35,6 @@ RUN apt-get upgrade \
 
 RUN gcc -v
 RUN make -v
+
+RUN wget https://github.com/google/protobuf/archive/v3.6.0.tar.gz \
+&& tar -xf v3.6.0.tar.gz
