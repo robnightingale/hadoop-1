@@ -27,11 +27,11 @@ RUN java -version
 RUN mvn -version
 
 RUN apt-get update \
-&& apt-get install zip
+&& apt-get install -yq zip
 
 #Install g++ for installing protobuf
 RUN apt-get upgrade \
-&& apt-get install build-essential
+&& apt-get install -y build-essential
 
 RUN gcc -v
 RUN make -v
