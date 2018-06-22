@@ -36,9 +36,10 @@ RUN apt-get upgrade -yq \
 RUN gcc -v
 RUN make -v
 
-RUN wget --no-check-certificate https://github.com/google/protobuf/releases/download/v3.6.0/protobuf-all-3.6.0.tar.gz \
-&& tar -xf protobuf-all-3.6.0.tar.gz \
-&& cd protobuf-3.6.0 \
+#Only protoc version 2.5.0 is used for compilation
+RUN wget --no-check-certificate https://github.com/google/protobuf/releases/download/v2.5.0/protobuf-2.5.0.tar.gz \
+&& tar -xf protobuf-2.5.0.tar.gz \
+&& cd protobuf-2.5.0 \
 && ./configure \
 && make \
 && make install
