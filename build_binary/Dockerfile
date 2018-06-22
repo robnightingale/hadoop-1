@@ -36,6 +36,8 @@ RUN apt-get upgrade -yq \
 RUN gcc -v
 RUN make -v
 
+RUN apt-get install -yq g++ make autoconf automake libtool cmake zlib1g-dev pkg-config libssl-dev
+
 #Only protoc version 2.5.0 is used for compilation
 RUN wget --no-check-certificate https://github.com/google/protobuf/releases/download/v2.5.0/protobuf-2.5.0.tar.gz \
 && tar -xf protobuf-2.5.0.tar.gz \
@@ -50,8 +52,6 @@ RUN wget http://redrockdigimark.com/apachemirror/hadoop/common/hadoop-3.1.0/hado
 
 ENV LD_LIBRARY_PATH /usr/local/lib:$LD_LIBRARY_PATH
 ENV HADOOP_PROTOC_PATH /usr/local/bin/protoc
-
-RUN apt-get install -yq cmake
 
 ADD execute.sh execute.sh
 RUN chmod +x execute.sh
