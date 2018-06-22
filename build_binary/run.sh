@@ -5,4 +5,4 @@
 #exec tail -f /var/log/tomcat6/catalina.out
 docker stop build
 docker rm build
-docker run -it -d --name build sumit/build /bin/bash
+docker run -it -d -v /home/sumit/repository/repository:/usr/lib/repository --name build sumit/build /bin/bash
