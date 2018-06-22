@@ -11,6 +11,7 @@ RUN apt-get install -yq g++ autoconf automake libtool cmake zlib1g-dev pkg-confi
 
 WORKDIR /tmp/
 ARG REPOSITORY_HOST
+ARG HADOOP_VERSION
 RUN wget "$REPOSITORY_HOST"/commons-daemon-1.1.0-src.tar.gz &&\
 tar -xzvf commons-daemon-1.1.0-src.tar.gz
 
