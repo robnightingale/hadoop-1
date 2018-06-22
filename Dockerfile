@@ -1,4 +1,4 @@
-FROM sumit/java8:latest
+FROM master.cloud.com:5000/ldapclient
 MAINTAINER Sumit Kumar Maji
 
 RUN apt-get update
@@ -49,10 +49,10 @@ ENV HADOOP_OPTS "-Djava.library.path=$HADOOP_INSTALL/lib/native"
 ENV HADOOP_CONF_DIR /usr/local/hadoop/etc/hadoop
 ENV JSVC_HOME /usr/bin
 
-RUN wget "$REPOSITORY_HOST"/hadoop-2.9.0.tar.gz &&\
-tar -xzvf hadoop-2.9.0.tar.gz &&\
-mv /usr/local/hadoop-2.9.0 /usr/local/hadoop &&\
-rm -rf /usr/local/hadoop-2.9.0.tar.gz &&\
+RUN wget "$REPOSITORY_HOST"/"$HADOOP_VERSION".tar.gz &&\
+tar -xzvf "$HADOOP_VERSION".tar.gz &&\
+mv /usr/local/"$HADOOP_VERSION" /usr/local/hadoop &&\
+rm -rf /usr/local/"$HADOOP_VERSION".tar.gz &&\
 java -version
 
 RUN sed -i 's/\(export JAVA_HOME=${JAVA_HOME}\)/#\1/' /usr/local/hadoop/etc/hadoop/hadoop-env.sh &&\
@@ -65,7 +65,7 @@ ADD config/hdfs-site.xml /tmp/config/hadoop/hdfs-site.xml
 ADD config/mapred-site.xml /tmp/config/hadoop/mapred-site.xml
 ADD config/core-site.xml /tmp/config/hadoop/core-site.xml
 ADD config/httpfs-site.xml /tmp/config/hadoop/httpfs-site.xml
-ADD config/yarn-site.xml /tmp/config/hadoop/yarn-site.xml 
+ADD config/yarn-site.xml /tmp/config/hadoop/yarn-site.xml
 ADD config/slaves /tmp/config/hadoop/slaves
 ADD config/ssl-server.xml /tmp/config/hadoop/ssl-server.xml
 ADD config/ssl-client.xml /tmp/config/hadoop/ssl-client.xml

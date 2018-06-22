@@ -6,3 +6,4 @@ BUILD_PATH=/tmp
 RELEASE_NAME=hadoop
 PATH_TO_CHART=chart
 DEPLOY=false
+BRANCH=kubernetes

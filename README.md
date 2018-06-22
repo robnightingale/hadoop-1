@@ -19,6 +19,27 @@ cd build_binary
 ```
 
 
+## Configuration
+The following table lists the configurable parameters of hadoop and their default values.
+
+| Parameter                   | Description                                           | Default                |
+|-----------------------------|-------------------------------------------------------|------------------------|
+| `BRANCH`                    | The branch of the repository                          | `kubernetes`           |
+| `BUILD_PATH`                | The location where repository would be cloned         | `/tmp`                 |
+| `IMAGE_NAME`                | The name of the docker image.                         | `sumit/hadoop`         |
+| `REPO_NAME`                 | The name of the repository in docker registry.        | `hadoop`               |
+| `CONTAINER_NAME`            | The name of the container.                            | `hadoop`               |
+| `MASTER`                    | The hostname of hadoop master.                        | `hafs-master`          |
+| `DOMAIN_NAME`               | The domain name of the hadoop cluster.                | `default.svc.cloud.uat`|
+| `HADOOP_INSTALL`            | Location of the hadoop install.                       | `/usr/local/hadoop`    |
+| `KEY_PWD`                   | Key password of the jsk files.                        | `sumit@1234`           |
+| `ENABLE_HADOOP_SSL`         | Enable SSL for hadoop.                                | `true`                 |
+| `ENABLE_KERBEROS`           | Enable kerberos authentication.                       | `true`                 |
+| `ENABLE_KUBERNETES`         | Enable kubernetes configuration.                      | `true`                 |
+| `REPOSITORY_HOST`           | Repository of hadoop binaries.                        |                        |
+| `HADOOP_VERSION`            | Hadoop version.                                       | `hadoop-3.1.0`         |
+
+
 ## Usefull Links
 - Compile hadoop native code
 http://www.ercoppa.org/posts/how-to-compile-apache-hadoop-on-ubuntu-linux.html
