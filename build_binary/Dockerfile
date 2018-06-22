@@ -47,6 +47,8 @@ RUN wget http://redrockdigimark.com/apachemirror/hadoop/common/hadoop-3.1.0/hado
 && tar -xzvf hadoop-3.1.0-src.tar.gz \
 && rm -rf hadoop-3.1.0-src.tar.gz
 
+ENV HADOOP_PROTOC_PATH /usr/local/bin/protoc
+
 ADD execute.sh execute.sh
 RUN chmod +x execute.sh
 
