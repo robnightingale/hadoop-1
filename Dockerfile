@@ -6,11 +6,11 @@ ARG HADOOP_VERSION
 
 WORKDIR /tmp
 
-RUN wget "$REPOSITORY_HOST"/jdk-8u131-linux-x64.tar.gz \
+RUN wget -q "$REPOSITORY_HOST"/jdk-8u131-linux-x64.tar.gz \
 && tar -xf jdk-8u131-linux-x64.tar.gz -C /usr/local/ \
 && mv /usr/local/jdk1.8.0_131 /usr/local/jdk \
 && rm -rf jdk-8u131-linux-x64.tar.gz \
-&& wget "$REPOSITORY_HOST"/apache-maven-3.3.9-bin.tar.gz \
+&& wget -q "$REPOSITORY_HOST"/apache-maven-3.3.9-bin.tar.gz \
 && tar -xf apache-maven-3.3.9-bin.tar.gz -C /usr/local/ \
 && mv /usr/local/apache-maven-3.3.9 /usr/local/maven \
 && rm -rf apache-maven-3.3.9-bin.tar.gz
@@ -37,7 +37,7 @@ RUN apt-get install -yq g++ autoconf automake libtool cmake zlib1g-dev pkg-confi
 
 
 #WORKDIR /tmp/
-RUN wget "$REPOSITORY_HOST"/commons-daemon-1.1.0-src.tar.gz &&\
+RUN wget -q "$REPOSITORY_HOST"/commons-daemon-1.1.0-src.tar.gz &&\
 tar -xzvf commons-daemon-1.1.0-src.tar.gz
 
 RUN cd commons-daemon-1.1.0-src/src/native/unix &&\
@@ -49,7 +49,7 @@ mv ./jsvc  /usr/bin/jsvc &&\
 which jsvc &&\
 jsvc -help
 
-RUN wget "$REPOSITORY_HOST"/jce_policy-8.zip
+RUN wget -q "$REPOSITORY_HOST"/jce_policy-8.zip
 RUN unzip jce_policy-8.zip
 RUN cp UnlimitedJCEPolicyJDK8/local_policy.jar UnlimitedJCEPolicyJDK8/US_export_policy.jar $JAVA_HOME/jre/lib/security
 
@@ -75,7 +75,7 @@ ENV HADOOP_OPTS "-Djava.library.path=$HADOOP_INSTALL/lib/native"
 ENV HADOOP_CONF_DIR /usr/local/hadoop/etc/hadoop
 ENV JSVC_HOME /usr/bin
 
-RUN wget "$REPOSITORY_HOST"/"$HADOOP_VERSION".tar.gz &&\
+RUN wget -q "$REPOSITORY_HOST"/"$HADOOP_VERSION".tar.gz &&\
 tar -xzvf "$HADOOP_VERSION".tar.gz &&\
 mv /usr/local/"$HADOOP_VERSION" /usr/local/hadoop &&\
 rm -rf /usr/local/"$HADOOP_VERSION".tar.gz &&\
