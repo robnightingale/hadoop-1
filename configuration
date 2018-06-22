@@ -1,0 +1,8 @@
+IMAGE_NAME=sumit/hadoop
+REGISTRY=master.cloud.com:5000
+REPO_NAME=hadoop
+CONTAINER_NAME=hadoop
+BUILD_PATH=/tmp
+RELEASE_NAME=hadoop
+PATH_TO_CHART=chart
+DEPLOY=false
