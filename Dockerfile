@@ -38,7 +38,7 @@ RUN apt-get install -yq g++ autoconf automake libtool cmake zlib1g-dev pkg-confi
 
 #WORKDIR /tmp/
 RUN wget -q "$REPOSITORY_HOST"/commons-daemon-1.1.0-src.tar.gz &&\
-tar -xzvf commons-daemon-1.1.0-src.tar.gz
+tar -xf commons-daemon-1.1.0-src.tar.gz
 
 RUN cd commons-daemon-1.1.0-src/src/native/unix &&\
 export CFLAGS=-m64 &&\
@@ -76,7 +76,7 @@ ENV HADOOP_CONF_DIR /usr/local/hadoop/etc/hadoop
 ENV JSVC_HOME /usr/bin
 
 RUN wget -q "$REPOSITORY_HOST"/"$HADOOP_VERSION".tar.gz &&\
-tar -xzvf "$HADOOP_VERSION".tar.gz &&\
+tar -xf "$HADOOP_VERSION".tar.gz &&\
 mv /usr/local/"$HADOOP_VERSION" /usr/local/hadoop &&\
 rm -rf /usr/local/"$HADOOP_VERSION".tar.gz &&\
 java -version
