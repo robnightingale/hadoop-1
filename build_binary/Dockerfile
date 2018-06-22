@@ -50,4 +50,4 @@ RUN wget http://redrockdigimark.com/apachemirror/hadoop/common/hadoop-3.1.0/hado
 ADD execute.sh execute.sh
 RUN chmod +x execute.sh
 
-ENTRYPOINT ["./tmp/execute.sh"]
+ENTRYPOINT ["/tmp/execute.sh"]
