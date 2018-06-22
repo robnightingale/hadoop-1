@@ -147,8 +147,8 @@ RUN cp /usr/bin/jsvc /usr/lib/bigtop-utils/
 #echo 'export JSVC_HOME=/usr/lib/bigtop-utils/' >> /usr/local/hadoop/etc/hadoop/hadoop-env.sh
 
 
-RUN sudo mkdir -p /var/log/hadoop
-RUN sudo mkdir -p /var/run/hadoop
+RUN mkdir -p /var/log/hadoop
+RUN mkdir -p /var/run/hadoop
 RUN addgroup hadoop
 
 RUN dd if=/dev/urandom of=/etc/security/http_secret bs=1024 count=1
