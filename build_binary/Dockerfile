@@ -44,4 +44,8 @@ RUN wget --no-check-certificate https://github.com/google/protobuf/releases/down
 && make install
 
 RUN wget http://redrockdigimark.com/apachemirror/hadoop/common/hadoop-3.1.0/hadoop-3.1.0-src.tar.gz \
-&& tar -xzvf hadoop-3.1.0-src.tar.gz
+&& tar -xzvf hadoop-3.1.0-src.tar.gz \
+&& rm -rf hadoop-3.1.0-src.tar.gz
+
+RUN cd hadoop-3.1.0-src \
+mvn package -Pdist,native -DskipTests -Dtar
