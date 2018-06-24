@@ -5,5 +5,5 @@ CONTAINER_NAME=hadoop
 BUILD_PATH=/tmp
 RELEASE_NAME=hadoop
 PATH_TO_CHART=chart
-DEPLOY=false
+DEPLOY=true
 BRANCH=kubernetes
