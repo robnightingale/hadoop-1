@@ -5,8 +5,8 @@
 replicaCount: 1
 
 image:
-  repository: nginx
-  tag: stable
+  repository: master.cloud.com:5000/hadoop
+  tag: latest
   pullPolicy: IfNotPresent
 
 service:
