@@ -1,5 +1,5 @@
-apiVersion: apps/v1beta2
-kind: Deployment
+apiVersion: v1
+kind: ConfigMap
 metadata:
   name: {{ template "hadoop.fullname" . }}
   labels:
@@ -341,4 +341,3 @@ data:
     }
 
     [[ "$0" == "$BASH_SOURCE" ]] && main "$@"
-  
