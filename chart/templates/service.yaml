@@ -1,0 +1,118 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ template "hadoop.fullname" . }}
+  labels:
+    app: {{ template "hadoop.name" . }}
+    chart: {{ template "hadoop.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  clusterIP: None
+  ports:
+    ports:
+    - port: 8181
+      protocol: TCP
+      name: ldap
+    - port: 389
+      protocol: TCP
+      name: search
+    - port: 22
+      protocol: TCP
+      name: ssh-port
+    - port: 2122
+      protocol: TCP
+      name: ssh-port2
+    - port: 636
+      protocol: TCP
+      name: ssl-ldap
+    - port: 50010
+      protocol: TCP
+      name: hdfs1
+    - port: 50020
+      protocol: TCP
+      name: hdfs2
+    - port: 50070
+      protocol: TCP
+      name: hdfs3
+    - port: 50075
+      protocol: TCP
+      name: hdfs5
+    - port: 50090
+      protocol: TCP
+      name: hdfs6
+    - port: 8020
+      protocol: TCP
+      name: hdfs7
+    - port: 9000
+      protocol: TCP
+      name: hdfs8
+    - port: 54310
+      protocol: TCP
+      name: hdfs9
+    - port: 50470
+      protocol: TCP
+      name: hdfs10
+    - port: 50475
+      protocol: TCP
+      name: hdfs11
+    - port: 1006
+      protocol: TCP
+      name: hdfs12
+    - port: 1019
+      protocol: TCP
+      name: hdfs13
+    - port: 14000
+      protocol: TCP
+      name: httpfs
+    - port: 10020
+      protocol: TCP
+      name: mapred1
+    - port: 19888
+      protocol: TCP
+      name: mapred2
+    - port: 10033
+      protocol: TCP
+      name: mapred3
+    - port: 54311
+      protocol: TCP
+      name: mapred4
+    - port: 8030
+      protocol: TCP
+      name: yarn1
+    - port: 8031
+      protocol: TCP
+      name: yarn2
+    - port: 8032
+      protocol: TCP
+      name: yarn3
+    - port: 8033
+      protocol: TCP
+      name: yarn4
+    - port: 8040
+      protocol: TCP
+      name: yarn5
+    - port: 8042
+      protocol: TCP
+      name: yarn6
+    - port: 8088
+      protocol: TCP
+      name: yarn7
+    - port: 8025
+      protocol: TCP
+      name: yarn8
+    - port: 8039
+      protocol: TCP
+      name: yarn9
+    - port: 49707
+      protocol: TCP
+      name: other1
+    - port: 50490
+      protocol: TCP
+      name: sec1
+    - port: 8010
+      protocol: TCP
+      name: data1
+  selector:
+    app: {{ template "hadoop.name" . }}
+    release: {{ .Release.Name }}
