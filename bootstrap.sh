@@ -11,6 +11,8 @@ echo -e "Starting SSHD service"
 /usr/sbin/sshd
 
 if [[ $2 == "master" ]]; then
+
+su - hduser -c "$HADOOP_INSTALL/sbin/stop-all.sh"
 su - hduser -c "$HADOOP_INSTALL/sbin/start-all.sh"
 su - hduser -c "$HADOOP_INSTALL/sbin/mr-jobhistory-daemon.sh start historyserver --config /usr/local/hadoop/etc/hadoop"
 su - hduser -c "$HADOOP_INSTALL/bin/hdfs dfs -mkdir -p /user/hduser"

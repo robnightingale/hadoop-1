@@ -13,13 +13,13 @@ chown hduser:hadoop /home/hduser/.ssh/config
 
 echo 'hduser:hadoop' | chpasswd
 
-wget "$REPOSITORY_HOST"/repo/hadoop-2.6.5.tar.gz
-tar -xzvf hadoop-2.6.5.tar.gz
-mv /usr/local/hadoop-2.6.5 /usr/local/hadoop
-rm -rf /usr/local/hadoop-2.6.5.tar.gz
+wget -q "$REPOSITORY_HOST"/repo/hadoop-3.0.3.tar.gz
+tar -xf hadoop-3.0.3.tar.gz
+mv /usr/local/hadoop-3.0.3 /usr/local/hadoop
+rm -rf /usr/local/hadoop-3.0.3.tar.gz
 chown -R hduser:hadoop /usr/local/hadoop
 
-su - hduser -c "echo 'export JAVA_HOME=/usr/local/jdk' >> /home/hduser/.bashrc"
+su - hduser -c "echo 'export JAVA_HOME=/usr/lib/jvm/java-8-oracle/jre' >> /home/hduser/.bashrc"
 su - hduser -c "echo 'export PATH=$PATH:$JAVA_HOME/bin' >> /home/hduser/.bashrc"
 su - hduser -c "echo 'export HADOOP_INSTALL=/usr/local/hadoop' >> /home/hduser/.bashrc"
 su - hduser -c "echo 'export PATH=$PATH:$HADOOP_INSTALL/bin' >> /home/hduser/.bashrc"
@@ -37,7 +37,7 @@ su - hduser -c "source /home/hduser/.bashrc"
 su - hduser -c "java -version"
 
 sed -i 's/\(export JAVA_HOME=${JAVA_HOME}\)/#\1/' /usr/local/hadoop/etc/hadoop/hadoop-env.sh
-sed -i '/export JAVA_HOME/ a\\nexport JAVA_HOME=/usr/local/jdk' /usr/local/hadoop/etc/hadoop/hadoop-env.sh
+sed -i '/export JAVA_HOME/ a\\nexport JAVA_HOME=/usr/lib/jvm/java-8-oracle/jre' /usr/local/hadoop/etc/hadoop/hadoop-env.sh
 chown hduser:hadoop /usr/local/hadoop/etc/hadoop/hadoop-env.sh
 
 mkdir -p /app/hadoop/tmp
@@ -72,4 +72,3 @@ ls -la /usr/local/hadoop/etc/hadoop/*-env.sh
 mkdir $HADOOP_INSTALL/input
 cp $HADOOP_INSTALL/etc/hadoop/*.xml $HADOOP_INSTALL/input
 chown hduser:hadoop $HADOOP_INSTALL/input
-

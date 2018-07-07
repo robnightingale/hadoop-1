@@ -1,14 +1,19 @@
-FROM master.cloud.com:5000/java8:latest
+FROM sumit/base-trusty
 MAINTAINER Sumit Kumar Maji
+
+RUN apt-get update
+RUN apt-get install -y software-properties-common
+RUN apt-add-repository -y ppa:webupd8team/java
+RUN apt-get update
+RUN echo oracle-java8-installer shared/accepted-oracle-license-v1-1 select true | /usr/bin/debconf-set-selections
+RUN apt-get install -y oracle-java8-installer
 
 
 WORKDIR /usr/local/
 ARG REPOSITORY_HOST
 
-ADD . /container/
-
-ENV JAVA_HOME /usr/local/jdk
-ENV PATH $JAVA_HOME/bin:$PATH
+#ENV JAVA_HOME /usr/local/jdk
+#ENV PATH $JAVA_HOME/bin:$PATH
 ENV HADOOP_INSTALL /usr/local/hadoop
 ENV PATH $PATH:$HADOOP_INSTALL/bin
 ENV PATH $PATH:$HADOOP_INSTALL/sbin
@@ -19,6 +24,8 @@ ENV YARN_HOME $HADOOP_INSTALL
 ENV HADOOP_COMMON_LIB_NATIVE_DIR $HADOOP_INSTALL/lib/native
 ENV HADOOP_OPTS "-Djava.library.path=$HADOOP_INSTALL/lib"
 ENV HADOOP_CONF_DIR /usr/local/hadoop/etc/hadoop
+
+COPY core-site.xml hdfs-site.xml  slaves bootstrap.sh httpfs-site.xml ssh_config mapred-site.xml setup.sh yarn-site.xml /container/
 
 RUN /container/setup.sh
 
