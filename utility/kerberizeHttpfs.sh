@@ -6,9 +6,8 @@ source /configg/hadoop/config
 
 filename=$1
 
-if [[ $filename = *"httpfs-site.xml"* ]]
-then
- sed -i 's/<\/configuration>/<!-- Enable Kerberos authentication for httfs--> \
+if [[ $filename == *"httpfs-site.xml"* ]]; then
+  sed -i 's/<\/configuration>/<!-- Enable Kerberos authentication for httfs--> \
 <property> \
   <name>httpfs.authentication.type<\/name> \
   <value>kerberos<\/value> \
@@ -36,4 +35,3 @@ then
 <!-- End --> \
 <\/configuration>/g' $filename
 fi
-

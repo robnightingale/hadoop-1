@@ -6,9 +6,8 @@ source /configg/hadoop/config
 
 filename=$1
 
-if [[ $filename = *"hdfs-site.xml"* ]]
-then
- sed -i 's/<\/configuration>/<!-- Enable Kerberos authentication for DataNode--> \
+if [[ $filename == *"hdfs-site.xml"* ]]; then
+  sed -i 's/<\/configuration>/<!-- Enable Kerberos authentication for DataNode--> \
 <!-- DataNode security config --> \
     <property> \
          <name>dfs.datanode.data.dir.perm<\/name> \
@@ -42,4 +41,3 @@ then
 <!-- End --> \
 <\/configuration>/g' $filename
 fi
-

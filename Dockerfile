@@ -26,9 +26,9 @@ ENV PATH $PATH:$MVN_HOME/bin
 ENV MAVEN_OPTS -Xms256m -Xmx512m
 
 RUN java -version
+RUN apt-get update
 RUN mvn -version
 
-RUN apt-get update
 RUN apt-get install -yq gcc make
 RUN apt-get install -yq g++
 RUN apt-get install -yq build-essential
@@ -196,7 +196,9 @@ RUN chmod +x /utility/hadoop/kerberizeHttpfs.sh
 RUN chown root:root /utility
 
 
-
+RUN mkdir -p /root/hdfs/datanode
+RUN mkdir -p /root/hdfs/namenode
+RUN mkdir -p /tmp/hadoop-config
 RUN mkdir -p /configg/hadoop
 ADD config/config /configg/hadoop/config
 #CMD ["/etc/bootstrap.sh", "-ssh"]

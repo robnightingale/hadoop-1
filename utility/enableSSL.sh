@@ -6,9 +6,8 @@ source /configg/hadoop/config
 
 filename=$1
 
-if [[ $filename = *"hdfs-site.xml"* ]]
-then
- sed -i 's/<\/configuration>/<!-- Enable SSL--> \
+if [[ $filename == *"hdfs-site.xml"* ]]; then
+  sed -i 's/<\/configuration>/<!-- Enable SSL--> \
     <property> \
          <name>dfs.http.policy<\/name> \
          <value>HTTPS_ONLY<\/value> \
@@ -31,18 +30,16 @@ then
     <\/property> \
 <!-- End --> \
 <\/configuration>/g' $filename
-elif [[ $filename = *"mapred-site.xml"* ]]
-then
- sed -i 's/<\/configuration>/<!-- Enable SSL--> \
+elif [[ $filename == *"mapred-site.xml"* ]]; then
+  sed -i 's/<\/configuration>/<!-- Enable SSL--> \
     <property> \
          <name>mapreduce.shuffle.ssl.enabled<\/name> \
          <value>true<\/value> \
      <\/property> \
 <!-- End --> \
 <\/configuration>/g' $filename
-elif [[ $filename = *"core-site.xml"* ]]
-then
- sed -i 's/<\/configuration>/<!-- Enable SSL--> \
+elif [[ $filename == *"core-site.xml"* ]]; then
+  sed -i 's/<\/configuration>/<!-- Enable SSL--> \
     <property> \
         <name>hadoop.ssl.require.client.cert<\/name> \
         <value>false<\/value> \
@@ -71,6 +68,3 @@ then
 <!-- End --> \
 <\/configuration>/g' $filename
 fi
-
-
-

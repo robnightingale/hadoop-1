@@ -6,9 +6,8 @@ source /configg/hadoop/config
 
 filename=$1
 
-if [[ $filename = *"hdfs-site.xml"* ]]
-then
- sed -i 's/<\/configuration>/<!-- Enable Kerberos authentication for SecondaryNameNode--> \
+if [[ $filename == *"hdfs-site.xml"* ]]; then
+  sed -i 's/<\/configuration>/<!-- Enable Kerberos authentication for SecondaryNameNode--> \
 <!-- Secondary NameNode security config --> \
     <property> \
          <name>dfs.secondary.namenode.kerberos.principal<\/name> \
@@ -46,4 +45,3 @@ then
 <!-- End --> \
 <\/configuration>/g' $filename
 fi
-

@@ -6,9 +6,8 @@ source /configg/hadoop/config
 
 filename=$1
 
-if [[ $filename = *"yarn-site.xml"* ]]
-then
- sed -i 's/<\/configuration>/<!-- Enable Kerberos authentication for Yarn--> \
+if [[ $filename == *"yarn-site.xml"* ]]; then
+  sed -i 's/<\/configuration>/<!-- Enable Kerberos authentication for Yarn--> \
 <!-- yarn process --> \
     <property> \
          <name>yarn.nodemanager.container-executor.class<\/name> \
@@ -38,9 +37,8 @@ then
     <\/property> \
 <!-- End --> \
 <\/configuration>/g' $filename
-elif [[ $filename = *"mapred-site.xml"* ]]
-then
- sed -i 's/<\/configuration>/<!-- Enable Kerberos authentication for Yarn--> \
+elif [[ $filename == *"mapred-site.xml"* ]]; then
+  sed -i 's/<\/configuration>/<!-- Enable Kerberos authentication for Yarn--> \
     <property> \
          <name>mapreduce.jobhistory.keytab<\/name> \
          <value>\/etc\/security\/keytabs\/hduser.keytab<\/value> \
@@ -52,4 +50,3 @@ then
 <!-- End --> \
 <\/configuration>/g' $filename
 fi
-

@@ -6,9 +6,8 @@ source /configg/hadoop/config
 
 filename=$1
 
-if [[ $filename = *"core-site.xml"* ]]
-then
- sed -i 's/<\/configuration>/<!-- Enable Kerberos authentication--> \
+if [[ $filename == *"core-site.xml"* ]]; then
+  sed -i 's/<\/configuration>/<!-- Enable Kerberos authentication--> \
     <property> \
          <name>hadoop.security.authentication<\/name> \
          <value>kerberos<\/value> \
@@ -22,9 +21,8 @@ then
     <\/property> \
 <!-- End --> \
 <\/configuration>/g' $filename
-elif [[ $filename = *"hdfs-site.xml"* ]]
-then
- sed -i 's/<\/configuration>/<!-- Enable Kerberos authentication for Namenode--> \
+elif [[ $filename == *"hdfs-site.xml"* ]]; then
+  sed -i 's/<\/configuration>/<!-- Enable Kerberos authentication for Namenode--> \
 <!-- General HDFS security config --> \
     <property> \
          <name>dfs.block.access.token.enable<\/name> \
@@ -61,4 +59,3 @@ then
 <!-- End --> \
 <\/configuration>/g' $filename
 fi
-
