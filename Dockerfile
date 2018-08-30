@@ -201,6 +201,10 @@ RUN mkdir -p /root/hdfs/namenode
 RUN mkdir -p /tmp/hadoop-config
 RUN mkdir -p /configg/hadoop
 ADD config/config /configg/hadoop/config
+RUN chown -R root:hadoop /app/hadoop/tmp
+RUN chown -R root:hadoop /root/hdfs
+RUN chown -R root:hadoop /usr/local/hadoop
+
 #CMD ["/etc/bootstrap.sh", "-ssh"]
 #CMD /usr/sbin/sshd -D
 #ENTRYPOINT ["/utility/hadoop/bootstrap.sh"]

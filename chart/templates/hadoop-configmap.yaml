@@ -270,6 +270,7 @@ data:
         chmod 050 /usr/local/hadoop/bin/container-executor
         chmod u+s /usr/local/hadoop/bin/container-executor
         chmod g+s /usr/local/hadoop/bin/container-executor
+        ls -ltr "$HADOOP_INSTALL"/bin/
         su - root -c "$HADOOP_INSTALL/bin/container-executor"
       }
 
@@ -306,7 +307,7 @@ data:
       changeOwner() {
         chown -R root:hadoop /app/hadoop/tmp
         chown -R root:hadoop /root/hdfs
-        # chown -R root:hadoop /usr/local/hadoop
+        chown -R root:hadoop /usr/local/hadoop
       }
 
       initializePrincipal() {
@@ -324,6 +325,11 @@ data:
 
       startServices() {
         su - root -c "$HADOOP_INSTALL/etc/hadoop/hadoop-env.sh"
+
+        if [ "$ENABLE_KERBEROS" == 'true' ]; then
+          kinit -k -t /etc/security/keytabs/hduser.keytab hduser/$(hostname -f)
+        fi
+
 
         # installing libraries if any - (resource urls added comma separated to the ACP system variable)
         cd $HADOOP_PREFIX/share/hadoop/common ; for cp in ${ACP//,/ }; do  echo == $cp; curl -LO $cp ; done; cd -
@@ -366,14 +372,10 @@ data:
           chmod +x start-yarn-nm.sh
 
           #  wait up to 30 seconds for resourcemanager
-          (while [[ $count -lt 15 && -z `curl -sf http://{{ template "hadoop.fullname" . }}-yarn-rm:8088/ws/v1/cluster/info` ]]; do ((count=count+1)) ; echo "Waiting for {{ template "hadoop.fullname" . }}-yarn-rm" ; sleep 2; done && [[ $count -lt 15 ]])
+          (while [[ $count -lt 15 && -z `curl -sf http://{{ template "hadoop.fullname" . }}-yarn-rm:8088/ws/v1/cluster/info` ]]; do ((count=count+1)) ; echo "Waiting for {{ template "hadoop.fullname" . }}-yarn-rm" ; sleep 5; done && [[ $count -lt 15 ]])
           [[ $? -ne 0 ]] && echo "Timeout waiting for yarn-rm, exiting." && exit 1
 
           ./start-yarn-nm.sh
-        fi
-
-        if [ "$ENABLE_KERBEROS" == 'true' ]; then
-          kinit -k -t /etc/security/keytabs/hduser.keytab hduser/$(hostname -f)
         fi
 
       }
@@ -408,7 +410,7 @@ data:
           initializePrincipal
         fi
 
-        changeOwner
+        # changeOwner
         setEnvVariable $1
       }
 
@@ -818,7 +820,7 @@ data:
       <!-- resource manager secure configuration info --> \
           <property> \
                <name>yarn.resourcemanager.principal<\/name> \
-               <value>hduser\/_HOST@$REALM<\/value> \
+               <value>hduser\/hadoop-hadoop-yarn-rm-0.hadoop-hadoop-yarn-rm.default.svc.cloud.uat@$REALM<\/value> \
           <\/property> \
           <property> \
                <name>yarn.resourcemanager.keytab<\/name> \
@@ -832,6 +834,18 @@ data:
           <property> \
                <name>yarn.nodemanager.keytab<\/name> \
                <value>\/etc\/security\/keytabs\/hduser.keytab<\/value> \
+          <\/property> \
+          <property> \
+               <name>yarn.web-proxy.principal<\/name> \
+               <value>hduser\/hadoop-hadoop-yarn-rm-0.hadoop-hadoop-yarn-rm.default.svc.cloud.uat@$REALM<\/value> \
+          <\/property> \
+          <property> \
+               <name>yarn.web-proxy.keytab<\/name> \
+               <value>\/etc\/security\/keytabs\/hduser.keytab<\/value> \
+          <\/property> \
+          <property> \
+               <name>yarn.web-proxy.address<\/name> \
+               <value>hadoop-hadoop-yarn-rm-0.hadoop-hadoop-yarn-rm.default.svc.cloud.uat:8090<\/value> \
           <\/property> \
       <!-- End --> \
       <\/configuration>/g' $filename
@@ -981,7 +995,7 @@ data:
 
     start-yarn-nm.sh: |
       #!/usr/bin/env bash
-
+      [[ "TRACE" ]] && set -x
       # Licensed to the Apache Software Foundation (ASF) under one or more
       # contributor license agreements.  See the NOTICE file distributed with
       # this work for additional information regarding copyright ownership.
@@ -1005,16 +1019,16 @@ data:
       bin=`dirname "${BASH_SOURCE-$0}"`
       bin=`cd "$bin"; pwd`
 
-      DEFAULT_LIBEXEC_DIR="$bin"/../libexec
-      HADOOP_LIBEXEC_DIR=${HADOOP_LIBEXEC_DIR:-$DEFAULT_LIBEXEC_DIR}
+      HADOOP_DEFAULT_LIBEXEC_DIR="$bin"/../libexec
+      HADOOP_LIBEXEC_DIR=${HADOOP_LIBEXEC_DIR:-$HADOOP_DEFAULT_LIBEXEC_DIR}
       . $HADOOP_LIBEXEC_DIR/yarn-config.sh
 
       # start resourceManager
-      # "$bin"/yarn-daemon.sh --config $YARN_CONF_DIR  start resourcemanager
+      # "$bin"/yarn-daemon.sh --config $HADOOP_CONF_DIR  start resourcemanager
       # start nodeManager
-      "$bin"/yarn-daemon.sh --config $YARN_CONF_DIR  start nodemanager
+      "$bin"/yarn-daemon.sh --config $HADOOP_CONF_DIR  start nodemanager
       # start proxyserver
-      #"$bin"/yarn-daemon.sh --config $YARN_CONF_DIR  start proxyserver
+      #"$bin"/yarn-daemon.sh --config $HADOOP_CONF_DIR  start proxyserver
 
     start-yarn-rm.sh: |
       #!/usr/bin/env bash
@@ -1042,16 +1056,16 @@ data:
       bin=`dirname "${BASH_SOURCE-$0}"`
       bin=`cd "$bin"; pwd`
 
-      DEFAULT_LIBEXEC_DIR="$bin"/../libexec
-      HADOOP_LIBEXEC_DIR=${HADOOP_LIBEXEC_DIR:-$DEFAULT_LIBEXEC_DIR}
+      HADOOP_DEFAULT_LIBEXEC_DIR="$bin"/../libexec
+      HADOOP_LIBEXEC_DIR=${HADOOP_LIBEXEC_DIR:-$HADOOP_DEFAULT_LIBEXEC_DIR}
       . $HADOOP_LIBEXEC_DIR/yarn-config.sh
 
       # start resourceManager
-      "$bin"/yarn-daemon.sh --config $YARN_CONF_DIR  start resourcemanager
+      "$bin"/yarn-daemon.sh --config $HADOOP_CONF_DIR  start resourcemanager
       # start nodeManager
-      # "$bin"/yarn-daemons.sh --config $YARN_CONF_DIR  start nodemanager
+      # "$bin"/yarn-daemons.sh --config $HADOOP_CONF_DIR  start nodemanager
       # start proxyserver
-      "$bin"/yarn-daemon.sh --config $YARN_CONF_DIR  start proxyserver
+      "$bin"/yarn-daemon.sh --config $HADOOP_CONF_DIR  start proxyserver
 
     yarn-site.xml: |
       <?xml version="1.0"?>
