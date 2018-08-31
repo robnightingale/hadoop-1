@@ -83,3 +83,7 @@ kubectl exec -it hadoop-hadoop-hdfs-nn-0 -- /usr/local/hadoop/bin/hdfs dfs -put 
 kubectl exec -n default -it hadoop-hadoop-yarn-nm-0 -- /usr/local/hadoop/bin/hadoop jar /usr/local/hadoop/share/hadoop/mapreduce/hadoop-mapreduce-examples-3.1.0.jar wordcount input output
 kubectl exec -it hadoop-hadoop-hdfs-nn-0 -- /usr/local/hadoop/bin/hdfs dfs -cat /user/hduser/output/part-r-00000
 ```
+
+
+# Notes
+- If kerberos is used with no SSL enabled then liveness and rediness port of datanode would be 1006 else it would be 50020
