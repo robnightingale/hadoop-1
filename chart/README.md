@@ -54,11 +54,11 @@ The following table lists the configurable parameters of the Hadoop chart and th
 | `yarn.nodeManager.replicas`                       | Number of YARN NodeManager replicas                                                | `2`                                                              |
 | `yarn.nodeManager.parallelCreate`                 | Create all nodeManager statefulset pods in parallel (K8S 1.7+)                     | `false`                                                          |
 | `yarn.nodeManager.resources`                      | Resource limits and requests for YARN NodeManager pods                             | `requests:memory=2048Mi,cpu=1000m,limits:memory=2048Mi,cpu=1000m`|
-| `persistence.nameNode.enabled`                    | Enable/disable persistent volume                                                   | `false`                                                          | 
+| `persistence.nameNode.enabled`                    | Enable/disable persistent volume                                                   | `false`                                                          |
 | `persistence.nameNode.storageClass`               | Name of the StorageClass to use per your volume provider                           | `-`                                                              |
 | `persistence.nameNode.accessMode`                 | Access mode for the volume                                                         | `ReadWriteOnce`                                                  |
 | `persistence.nameNode.size`                       | Size of the volume                                                                 | `50Gi`                                                           |
-| `persistence.dataNode.enabled`                    | Enable/disable persistent volume                                                   | `false`                                                          | 
+| `persistence.dataNode.enabled`                    | Enable/disable persistent volume                                                   | `false`                                                          |
 | `persistence.dataNode.storageClass`               | Name of the StorageClass to use per your volume provider                           | `-`                                                              |
 | `persistence.dataNode.accessMode`                 | Access mode for the volume                                                         | `ReadWriteOnce`                                                  |
 | `persistence.dataNode.size`                       | Size of the volume                                                                 | `200Gi`                                                          |
@@ -74,3 +74,12 @@ helm install --set hadoop.useConfigMap=true stable/zeppelin
 # References
 
 - Original K8S Hadoop adaptation this chart was derived from: https://github.com/Comcast/kube-yarn
+
+# Verify the installation
+
+```console
+kubectl exec -it hadoop-hadoop-hdfs-nn-0 -- /usr/local/hadoop/bin/hdfs dfs -mkdir -p /user/hduser/input
+kubectl exec -it hadoop-hadoop-hdfs-nn-0 -- /usr/local/hadoop/bin/hdfs dfs -put /usr/local/hadoop/LICENSE.txt /user/hduser/input/
+kubectl exec -n default -it hadoop-hadoop-yarn-nm-0 -- /usr/local/hadoop/bin/hadoop jar /usr/local/hadoop/share/hadoop/mapreduce/hadoop-mapreduce-examples-3.1.0.jar wordcount input output
+kubectl exec -it hadoop-hadoop-hdfs-nn-0 -- /usr/local/hadoop/bin/hdfs dfs -cat /user/hduser/output/part-r-00000
+```
